@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="823909a6-7b71-434b-b090-f3bdf01afdbc" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/oke-cluster-tf.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/default_route_table/main.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/default_route_table/outputs.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/default_route_table/variables.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/default_security_list/main.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/default_security_list/outputs.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/default_security_list/variables.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/internet_gateway/main.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/internet_gateway/outputs.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/internet_gateway/variables.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/local_peering_gateway/main.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/local_peering_gateway/outputs.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/local_peering_gateway/variables.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/network_gateway/main.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/network_gateway/outputs.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/network_gateway/variables.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/network_security_group/main.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/network_security_group/outputs.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/network_security_group/variables.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/oke_cluster/main.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/oke_cluster/outputs.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/oke_cluster/variables.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/oke_node_pool/main.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/oke_node_pool/outputs.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/oke_node_pool/variables.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/route_table/main.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/route_table/outputs.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/route_table/variables.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/security_list/main.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/security_list/outputs.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/security_list/variables.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/service_gateway/main.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/service_gateway/outputs.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/service_gateway/variables.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/subnet/main.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/subnet/outputs.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/subnet/variables.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/vcn/main.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/vcn/outputs.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/vcn/variables.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/provider.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/variables.tf" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Empty File" />
+        <option value="Outputs" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <branch-grouping />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="2vTIoyOzXid0PkGFmqXFr6iHpYm" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "C:/Users/jeferson.ferreira/OneDrive - Sonda S.A/Migração OCI/Terraform/oke-cluster-tf"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="Plan directory vcn-db-systems-tf-conf" type="TerraformConfigurationType" factoryName="Terraform plan" temporary="true" show_console_on_std_err="false" show_console_on_std_out="false">
+      <option name="allowRunningInParallel" value="false" />
+      <option name="commandType" value="PLAN" />
+      <option name="envFilePaths">
+        <list />
+      </option>
+      <option name="envs">
+        <map />
+      </option>
+      <option name="globalOptions" value="" />
+      <option name="passGlobalOptions" value="false" />
+      <option name="passParentEnvs" value="true" />
+      <option name="programArguments" value="" />
+      <option name="programParameters" value="plan" />
+      <option name="projectPathOnTarget" />
+      <option name="selectedOptions">
+        <list />
+      </option>
+      <option name="workingDirectory" value="C:\Users\jeferson.ferreira.SONDA_USUARIOS\OneDrive - Sonda S.A\Migração OCI\Terraform\vcn-oke-cluster-apps-tf-conf" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Terraform.Plan directory vcn-db-systems-tf-conf" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-b3d66beaba9a-c6efb3732140-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.26199.168" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="823909a6-7b71-434b-b090-f3bdf01afdbc" name="Changes" comment="" />
+      <created>1744162816879</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1744162816879</updated>
+    </task>
+    <servers />
+  </component>
+</project>
