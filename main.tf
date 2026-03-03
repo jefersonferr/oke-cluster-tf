@@ -433,10 +433,10 @@ module "oke-node-pool" {
   oke_cluster_id          = module.oke-cluster.cluster_id
   compartment_id          = var.compartment_id
   node_pool_name          = "${var.cluster_name}-node-pool"
-  node_shape              = "VM.Standard.E6.Flex"
-  node_image_id           = "ocid1.image.oc1.sa-saopaulo-1.aaaaaaaahstqtl6uorxo4hp75micvdmqastqtf537t6r56hws3lfwocb272q"
-  ocpus                   = 2
-  memory_in_gbs           = 16
+  node_shape              = var.pool_node_shape # Eg. 'VM.Standard.E6.Flex'
+  node_image_id           = var.pool_node_image_id # Search in: https://docs.oracle.com/en-us/iaas/images/oke-worker-node-oracle-linux-8x/oracle-linux-8.10-gen2-gpu-2025.11.20-0-oke-1.34.2-1345.htm
+  ocpus                   = var.ocpus
+  memory_in_gbs           = var.memory_in_gbs
   node_subnet_id          = module.subnet-nodes.subnet_id
   size                    = var.pool_size
   pod_subnet_ids          = [module.subnet-pods.subnet_id]

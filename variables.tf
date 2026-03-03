@@ -79,3 +79,26 @@ variable "pool_size" {
     error_message = "The pool_size must be a non-negative integer."
   }
 }
+
+variable "pool_node_shape" {
+  description = "The shape of the nodes in the node pool, defining the CPU and memory architecture."
+  type        = string
+  default     = "VM.Standard.E6.Flex"
+}
+
+variable "pool_node_image_id" {
+  description = "The OCID of the image to be used for the nodes in the node pool."
+  type        = string
+}
+
+variable "ocpus" {
+  description = "The number of OCPUs to be assigned to each node when using a flexible shape."
+  type        = number
+  default     = 2
+}
+
+variable "memory_in_gbs" {
+  description = "The amount of memory in GBs to be assigned to each node when using a flexible shape."
+  type        = number
+  default     = 16
+}
