@@ -288,7 +288,7 @@ module "sl-subnet-pods" {
       destination      = var.subnet_pods_cidr_19
       destination_type = "CIDR_BLOCK"
       description      = "Allow pods to communicate with other pods"
-    }
+    },
     {
       protocol         = "6" # TCP
       destination      = var.all_region_services

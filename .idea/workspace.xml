@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="823909a6-7b71-434b-b090-f3bdf01afdbc" name="Changes" comment="Remove unnecessary files">
+    <list default="true" id="823909a6-7b71-434b-b090-f3bdf01afdbc" name="Changes" comment="Add new variables and adjustments.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.tf" beforeDir="false" afterPath="$PROJECT_DIR$/main.tf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/variables.tf" beforeDir="false" afterPath="$PROJECT_DIR$/variables.tf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,18 +25,18 @@
     <branch-grouping />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "jefersonferr"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;jefersonferr&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/jefersonferr/oke-cluster-tf.git",
-    "accountId": "c75ecf8c-511b-4241-a83d-6a8d361ada26"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/jefersonferr/oke-cluster-tf.git&quot;,
+    &quot;accountId&quot;: &quot;c75ecf8c-511b-4241-a83d-6a8d361ada26&quot;
   }
-}]]></component>
+}</component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -53,6 +52,7 @@
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "master",
     "last_opened_file_path": "C:/Users/jeferson.ferreira/OneDrive - Sonda S.A/Migração OCI/Terraform/oke-cluster-tf"
   }
@@ -125,7 +125,15 @@
       <option name="project" value="LOCAL" />
       <updated>1772135480547</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Add new variables and adjustments.">
+      <option name="closed" value="true" />
+      <created>1772561642928</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1772561642928</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -142,6 +150,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="First version" />
     <MESSAGE value="Remove unnecessary files" />
-    <option name="LAST_COMMIT_MESSAGE" value="Remove unnecessary files" />
+    <MESSAGE value="Add new variables and adjustments." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add new variables and adjustments." />
   </component>
 </project>
