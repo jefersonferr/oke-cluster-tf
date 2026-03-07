@@ -79,6 +79,11 @@ This architecture ensures:
 
 ---
 
+# OKE Cluster Deployment with OCI Resource Manager and Terraform
+[Deploy this repository](oci-deployment.md)
+
+---
+
 # Terraform Input Variables
 
 Below are the required and configurable variables supported by this repository.
