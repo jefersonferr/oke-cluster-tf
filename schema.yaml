@@ -163,18 +163,19 @@ variables:
   pool_node_image_id:
     type: oci:core:image:id
     title: "Node Image"
+    description: "OKE Worker Node image used by the node pool"
 
     dependsOn:
       compartmentId: compartment_id
-      shape: pool_node_shape
       region: region
+      shape: pool_node_shape
       kubernetesVersion: kubernetes_version
 
     filters:
-      - filters:
-          - type: operatingSystem
-            pattern: "Oracle Linux"
-          - type: operatingSystemVersion
-            pattern: "8"
-      - type: displayName
-        pattern: "Oracle-Linux-8.*-OKE-${kubernetesVersion}-.*"
+      - type: imageFamily
+        values:
+          - "OKE Worker Node Oracle Linux 8.x"
+
+      - type: operatingSystem
+        values:
+          - "Oracle Linux"
