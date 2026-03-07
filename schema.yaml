@@ -154,28 +154,10 @@ variables:
     default: 16
     minimum: 8
 
-  #pool_node_image_id:
-  #  type: string
-  #  title: "Node Image OCID"
-  #  description: "Image used by worker nodes"
-  #  required: true
-
   pool_node_image_id:
-    type: oci:core:image:id
-    title: "Node Image"
-    description: "OKE Worker Node image used by the node pool"
+    type: string
+    title: "Node Image OCID"
+    description: "Image used by worker nodes"
+    required: true
 
-    dependsOn:
-      compartmentId: compartment_id
-      region: region
-      shape: pool_node_shape
-      kubernetesVersion: kubernetes_version
 
-    filters:
-      - type: imageFamily
-        values:
-          - "OKE Worker Node Oracle Linux 8.x"
-
-      - type: operatingSystem
-        values:
-          - "Oracle Linux"
