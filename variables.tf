@@ -8,11 +8,6 @@ variable "compartment_id" {
   description = "The OCID of the compartment where resource will be created"
 }
 
-variable "all_region_services" {
-  type        = string
-  description = "The OCID or lookup name for all Oracle services in the region"
-}
-
 variable "cluster_name" {
   type        = string
   description = "The display name of the OKE cluster"
