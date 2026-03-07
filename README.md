@@ -106,22 +106,6 @@ variable "cluster_name" {
 
 ---
 
-## OCI Service Access
-
-```hcl
-variable "service_id" {
-  type        = string
-  description = "The OCID of the Service Gateway or specific Oracle Service (e.g., All Services in Region)"
-}
-
-variable "all_region_services" {
-  type        = string
-  description = "The OCID or lookup name for all Oracle services in the region"
-}
-```
-
----
-
 ## Network Configuration
 
 ```hcl
