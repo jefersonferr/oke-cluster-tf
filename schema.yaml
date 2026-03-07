@@ -33,7 +33,7 @@ variableGroups:
 variables:
 
   region:
-    type: string
+    type: enum
     title: "OCI Region"
     description: "Region where resources will be deployed"
     required: true
@@ -55,19 +55,21 @@ variables:
     required: true
 
   type_of_cluster:
-    type: string
+    type: enum
     title: "Cluster Type"
     description: "Type of OKE cluster"
     default: "ENHANCED_CLUSTER"
+    required: true
     enum:
       - BASIC_CLUSTER
       - ENHANCED_CLUSTER
 
   cni_type:
-    type: string
+    type: enum
     title: "CNI Plugin"
     description: "Networking plugin used by Kubernetes"
     default: "OCI_VCN_IP_NATIVE"
+    required: true
     enum:
       - OCI_VCN_IP_NATIVE
       - FLANNEL
@@ -85,6 +87,7 @@ variables:
     description: "Subnet used by OCI Load Balancers"
     default: "10.0.0.0/24"
     pattern: "^([0-9]{1,3}\\.){3}[0-9]{1,3}/24$"
+    required: true
 
   subnet_api_endpoint_cidr_29:
     type: string
@@ -92,6 +95,7 @@ variables:
     description: "Subnet used by Kubernetes API endpoint"
     default: "10.0.1.0/29"
     pattern: "^([0-9]{1,3}\\.){3}[0-9]{1,3}/29$"
+    required: true
 
   subnet_nodes_cidr_24:
     type: string
@@ -99,6 +103,7 @@ variables:
     description: "Subnet used by worker nodes"
     default: "10.0.2.0/24"
     pattern: "^([0-9]{1,3}\\.){3}[0-9]{1,3}/24$"
+    required: true
 
   subnet_pods_cidr_19:
     type: string
@@ -106,6 +111,7 @@ variables:
     description: "Subnet used by Kubernetes native pods"
     default: "10.0.32.0/19"
     pattern: "^([0-9]{1,3}\\.){3}[0-9]{1,3}/19$"
+    required: true
 
   service_id:
     type: string
@@ -127,7 +133,7 @@ variables:
     minimum: 1
 
   pool_node_shape:
-    type: string
+    type: enum
     title: "Node Shape"
     description: "Compute shape used by worker nodes"
     default: "VM.Standard.E6.Flex"
