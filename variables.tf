@@ -96,5 +96,5 @@ variable "memory_in_gbs" {
 variable "kubernetes_version" {
   description = "The specific version of Kubernetes to be used for the OKE cluster control plane and worker nodes."
   type    = string
-  default = "v1.34.2"
+  default = "1.34.2"
 }

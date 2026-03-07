@@ -161,9 +161,8 @@ variables:
   #  required: true
 
   pool_node_image_id:
-    type: oci:ce:node-pool:image:id
+    type: oci:core:image:id
     title: "Node Image"
-    description: "Image used by the worker nodes"
 
     dependsOn:
       compartmentId: compartment_id
@@ -172,5 +171,10 @@ variables:
       kubernetesVersion: kubernetes_version
 
     filters:
+      - filters:
+          - type: operatingSystem
+            pattern: "Oracle Linux"
+          - type: operatingSystemVersion
+            pattern: "8"
       - type: displayName
         pattern: "Oracle-Linux-8.*-OKE-${kubernetesVersion}-.*"
