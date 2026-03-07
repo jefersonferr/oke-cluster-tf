@@ -1,0 +1,156 @@
+schemaVersion: 1.1.0
+version: "2026.03.06"
+locale: "en"
+
+variableGroups:
+
+  - title: "General Configuration"
+    variables:
+      - region
+      - compartment_id
+      - cluster_name
+      - type_of_cluster
+      - cni_type
+
+  - title: "Network Configuration"
+    variables:
+      - vcn_cidr_block_16
+      - subnet_lb_cidr_24
+      - subnet_api_endpoint_cidr_29
+      - subnet_nodes_cidr_24
+      - subnet_pods_cidr_19
+      - service_id
+      - all_region_services
+
+  - title: "Node Pool Configuration"
+    variables:
+      - pool_size
+      - pool_node_shape
+      - ocpus
+      - memory_in_gbs
+      - pool_node_image_id
+
+variables:
+
+  region:
+    type: string
+    title: "OCI Region"
+    description: "Region where resources will be deployed"
+    required: true
+    default: "sa-saopaulo-1"
+    enum:
+      - sa-saopaulo-1
+      - sa-vinhedo-1
+
+  compartment_id:
+    type: string
+    title: "Compartment OCID"
+    description: "The OCID of the compartment where resources will be created"
+    required: true
+
+  cluster_name:
+    type: string
+    title: "OKE Cluster Name"
+    description: "Display name of the Kubernetes cluster"
+    required: true
+
+  type_of_cluster:
+    type: string
+    title: "Cluster Type"
+    description: "Type of OKE cluster"
+    default: "ENHANCED_CLUSTER"
+    enum:
+      - BASIC_CLUSTER
+      - ENHANCED_CLUSTER
+
+  cni_type:
+    type: string
+    title: "CNI Plugin"
+    description: "Networking plugin used by Kubernetes"
+    default: "OCI_VCN_IP_NATIVE"
+    enum:
+      - OCI_VCN_IP_NATIVE
+      - FLANNEL
+
+  vcn_cidr_block_16:
+    type: string
+    title: "VCN CIDR Block"
+    description: "IPv4 CIDR /16 block for the VCN"
+    default: "10.0.0.0/16"
+    pattern: "^([0-9]{1,3}\\.){3}[0-9]{1,3}/16$"
+
+  subnet_lb_cidr_24:
+    type: string
+    title: "Load Balancer Subnet CIDR"
+    description: "Subnet used by OCI Load Balancers"
+    default: "10.0.0.0/24"
+    pattern: "^([0-9]{1,3}\\.){3}[0-9]{1,3}/24$"
+
+  subnet_api_endpoint_cidr_29:
+    type: string
+    title: "API Endpoint Subnet CIDR"
+    description: "Subnet used by Kubernetes API endpoint"
+    default: "10.0.1.0/29"
+    pattern: "^([0-9]{1,3}\\.){3}[0-9]{1,3}/29$"
+
+  subnet_nodes_cidr_24:
+    type: string
+    title: "Worker Nodes Subnet CIDR"
+    description: "Subnet used by worker nodes"
+    default: "10.0.2.0/24"
+    pattern: "^([0-9]{1,3}\\.){3}[0-9]{1,3}/24$"
+
+  subnet_pods_cidr_19:
+    type: string
+    title: "Pods Subnet CIDR"
+    description: "Subnet used by Kubernetes native pods"
+    default: "10.0.32.0/19"
+    pattern: "^([0-9]{1,3}\\.){3}[0-9]{1,3}/19$"
+
+  service_id:
+    type: string
+    title: "Service Gateway Service OCID"
+    description: "The OCID of the Service Gateway target service"
+    required: true
+
+  all_region_services:
+    type: string
+    title: "All Region Services"
+    description: "The OCID or lookup name for all Oracle services in the region"
+    required: true
+
+  pool_size:
+    type: number
+    title: "Worker Node Count"
+    description: "Number of worker nodes in the node pool"
+    default: 2
+    minimum: 1
+
+  pool_node_shape:
+    type: string
+    title: "Node Shape"
+    description: "Compute shape used by worker nodes"
+    default: "VM.Standard.E6.Flex"
+    enum:
+      - VM.Standard.E6.Flex
+      - VM.Standard.E5.Flex
+
+  ocpus:
+    type: number
+    title: "Node OCPUs"
+    description: "OCPUs per node (only used for Flex shapes)"
+    default: 2
+    minimum: 1
+
+  memory_in_gbs:
+    type: number
+    title: "Node Memory (GB)"
+    description: "Memory per node in GB"
+    default: 16
+    minimum: 8
+
+  pool_node_image_id:
+    type: string
+    title: "Node Image OCID"
+    description: "Image used by worker nodes"
+    required: true
