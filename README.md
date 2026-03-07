@@ -14,7 +14,6 @@ https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengnetworkconfig
 
 Platform references:
 
-* Oracle
 * Oracle Cloud Infrastructure
 * Oracle Kubernetes Engine
 
@@ -65,7 +64,7 @@ This architecture ensures:
 ## Cluster
 
 * Type: `BASIC_CLUSTER` or `ENHANCED_CLUSTER`
-* CNI: `OCI_VCN_IP_NATIVE` (default)
+* CNI: `OCI_VCN_IP_NATIVE`
 * Public Kubernetes API endpoint
 * Dedicated endpoint subnet
 * Service LB subnet configured
@@ -260,7 +259,6 @@ terraform apply
 # Production Recommendations
 
 * Restrict Kubernetes API endpoint CIDR access
-* Prefer Network Security Groups (NSGs) over Security Lists
 * Remove SSH if not required
 * Enable OKE audit logging
 * Apply least-privilege IAM policies
