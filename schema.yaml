@@ -56,7 +56,7 @@ variables:
     required: true
 
   kubernetes_version:
-    type: oci:containerengine:kubernetesversion
+    type: string
     title: "Kubernetes Version"
     description: "The Kubernetes version used for the OKE control plane and worker nodes"
 
@@ -64,7 +64,7 @@ variables:
       compartmentId: compartment_id
       region: region
 
-    default: "1.34.2"
+    default: "v1.34.2"
 
   type_of_cluster:
     type: enum
@@ -127,15 +127,17 @@ variables:
     required: true
 
   service_id:
-    type: oci:core:servicegateway:id
+    type: oci:core:service:id
     title: "Service Gateway Service OCID"
-    description: "The OCID of the Service Gateway target service"
-    required: true
+    description: "Select the Oracle Service accessed through the Service Gateway (for example: All Services in Oracle Services Network)."
+    dependsOn:
+      region: region
+      required: true
 
   all_region_services:
     type: string
     title: "All Region Services"
-    description: "The OCID or lookup name for all Oracle services in the region"
+    description: "All Services in Oracle Services Network for the selected region"
     required: true
 
   pool_size:
