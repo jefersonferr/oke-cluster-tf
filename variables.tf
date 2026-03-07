@@ -8,11 +8,6 @@ variable "compartment_id" {
   description = "The OCID of the compartment where resource will be created"
 }
 
-variable "service_id" {
-  type        = string
-  description = "The OCID of the Service Gateway or specific Oracle Service (e.g., All Services in Region)"
-}
-
 variable "all_region_services" {
   type        = string
   description = "The OCID or lookup name for all Oracle services in the region"
@@ -106,5 +101,5 @@ variable "memory_in_gbs" {
 variable "kubernetes_version" {
   description = "The specific version of Kubernetes to be used for the OKE cluster control plane and worker nodes."
   type    = string
-  default = "v1.34.2" # Removido o 'v' para compatibilidade com a API OCI
+  default = "v1.34.2"
 }

@@ -126,20 +126,6 @@ variables:
     pattern: "^([0-9]{1,3}\\.){3}[0-9]{1,3}/19$"
     required: true
 
-  service_id:
-    type: oci:core:service:id
-    title: "Service Gateway Service OCID"
-    description: "Select the Oracle Service accessed through the Service Gateway (for example: All Services in Oracle Services Network)."
-    dependsOn:
-      region: region
-      required: true
-
-  all_region_services:
-    type: string
-    title: "All Region Services"
-    description: "All Services in Oracle Services Network for the selected region"
-    required: true
-
   pool_size:
     type: number
     title: "Worker Node Count"

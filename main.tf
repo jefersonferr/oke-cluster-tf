@@ -18,7 +18,6 @@ module "sg-vcn" {
     compartment_id  = var.compartment_id
     display_name    = "sg-${var.cluster_name}"
     vcn_id          = module.vcn.vcn_id
-    service_id      = var.service_id
 }
 
 module "ng-vcn" {
@@ -135,7 +134,7 @@ module "sl-subnet-nodes" {
     },
     {
       protocol         = "6" # TCP
-      destination      = var.all_region_services
+      destination      = module.sg-vcn.all_region_services
       destination_type = "SERVICE_CIDR_BLOCK"
       description      = "Allow worker nodes to communicate with OKE"
     },
@@ -218,13 +217,13 @@ module "sl-subnet-api-endpoint" {
   egress_security_rules = [
     {
       protocol         = "6" # TCP
-      destination      = var.all_region_services
+      destination      = module.sg-vcn.all_region_services
       destination_type = "SERVICE_CIDR_BLOCK"
       description      = "Allow Kubernetes API endpoint to communicate with OKE"
     },
     {
       protocol         = "1" # ICMP
-      destination      = var.all_region_services
+      destination      = module.sg-vcn.all_region_services
       destination_type = "SERVICE_CIDR_BLOCK"
       icmp_type        = 3
       icmp_code        = 4
@@ -291,13 +290,13 @@ module "sl-subnet-pods" {
     },
     {
       protocol         = "6" # TCP
-      destination      = var.all_region_services
+      destination      = module.sg-vcn.all_region_services
       destination_type = "SERVICE_CIDR_BLOCK"
       description      = "Allow pods to communicate with OCI services"
     },
     {
       protocol         = "1" # ICMP
-      destination      = var.all_region_services
+      destination      = module.sg-vcn.all_region_services
       destination_type = "SERVICE_CIDR_BLOCK"
       icmp_type        = 3
       icmp_code        = 4
@@ -410,7 +409,7 @@ module "rt-private-subnet" {
     },
     {
       network_entity_id = module.sg-vcn.service_gateway_id
-      destination       = var.all_region_services
+      destination       = module.sg-vcn.all_region_services
       destination_type  = "SERVICE_CIDR_BLOCK"
       description       = "Route to Service Gateway"
     }

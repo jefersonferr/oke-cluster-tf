@@ -14,6 +14,7 @@ variable "vcn_id" {
 }
 
 variable "service_id" {
+  description = "Optional Oracle Service OCID. If not provided, All Services in Oracle Services Network will be used automatically."
   type        = string
-  description = "The OCID of the Service Gateway or specific Oracle Service (e.g., All Services in Region)"
+  default     = null
 }
