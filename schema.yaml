@@ -62,7 +62,7 @@ variables:
       compartmentId: compartment_id
       region: region
 
-    default: "v1.34.2"
+    default: "1.34.2"
 
   type_of_cluster:
     type: enum
@@ -173,4 +173,4 @@ variables:
 
     filters:
       - type: displayName
-        pattern: "Oracle-Linux.*OKE.*"
+        pattern: "Oracle-Linux-8.*-OKE-${kubernetesVersion}-.*"
