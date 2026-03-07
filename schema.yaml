@@ -172,11 +172,5 @@ variables:
       kubernetesVersion: kubernetes_version
 
     filters:
-      - type: operatingSystem
-        values:
-          - "Oracle Linux"
-
-      - type: operatingSystemVersion
-        values:
-          - "8"
-          - "9"
+      - type: displayName
+        pattern: "Oracle-Linux.*OKE.*"
