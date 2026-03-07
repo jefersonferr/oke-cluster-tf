@@ -4,14 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="823909a6-7b71-434b-b090-f3bdf01afdbc" name="Changes" comment="Bug fix">
+    <list default="true" id="823909a6-7b71-434b-b090-f3bdf01afdbc" name="Changes" comment="Variables all_region_services and service_id retrieved automatically. Removed from variables.tf and schema.yaml">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.tf" beforeDir="false" afterPath="$PROJECT_DIR$/main.tf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/service_gateway/main.tf" beforeDir="false" afterPath="$PROJECT_DIR$/modules/service_gateway/main.tf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/service_gateway/outputs.tf" beforeDir="false" afterPath="$PROJECT_DIR$/modules/service_gateway/outputs.tf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/service_gateway/variables.tf" beforeDir="false" afterPath="$PROJECT_DIR$/modules/service_gateway/variables.tf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schema.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/schema.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/variables.tf" beforeDir="false" afterPath="$PROJECT_DIR$/variables.tf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -178,7 +172,15 @@
       <option name="project" value="LOCAL" />
       <updated>1772848794728</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Variables all_region_services and service_id retrieved automatically. Removed from variables.tf and schema.yaml">
+      <option name="closed" value="true" />
+      <created>1772850801441</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1772850801441</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -201,6 +203,7 @@
     <MESSAGE value="Added enum variables in schema.yaml" />
     <MESSAGE value="Added variable kubernetes version." />
     <MESSAGE value="Bug fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="Bug fix" />
+    <MESSAGE value="Variables all_region_services and service_id retrieved automatically. Removed from variables.tf and schema.yaml" />
+    <option name="LAST_COMMIT_MESSAGE" value="Variables all_region_services and service_id retrieved automatically. Removed from variables.tf and schema.yaml" />
   </component>
 </project>

@@ -20,8 +20,6 @@ variableGroups:
       - subnet_api_endpoint_cidr_29
       - subnet_nodes_cidr_24
       - subnet_pods_cidr_19
-      - service_id
-      - all_region_services
 
   - title: "Node Pool Configuration"
     variables:
