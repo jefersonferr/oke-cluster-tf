@@ -9,6 +9,7 @@ variableGroups:
       - region
       - compartment_id
       - cluster_name
+      - kubernetes_version
       - type_of_cluster
       - cni_type
 
@@ -43,7 +44,7 @@ variables:
       - sa-vinhedo-1
 
   compartment_id:
-    type: string
+    type: oci:identity:compartment:id
     title: "Compartment OCID"
     description: "The OCID of the compartment where resources will be created"
     required: true
@@ -53,6 +54,17 @@ variables:
     title: "OKE Cluster Name"
     description: "Display name of the Kubernetes cluster"
     required: true
+
+  kubernetes_version:
+    type: oci:containerengine:kubernetesversion
+    title: "Kubernetes Version"
+    description: "The Kubernetes version used for the OKE control plane and worker nodes"
+
+    dependsOn:
+      compartmentId: compartment_id
+      region: region
+
+    default: "1.34.2"
 
   type_of_cluster:
     type: enum
@@ -80,6 +92,7 @@ variables:
     description: "IPv4 CIDR /16 block for the VCN"
     default: "10.0.0.0/16"
     pattern: "^([0-9]{1,3}\\.){3}[0-9]{1,3}/16$"
+    required: true
 
   subnet_lb_cidr_24:
     type: string
@@ -114,7 +127,7 @@ variables:
     required: true
 
   service_id:
-    type: string
+    type: oci:core:servicegateway:id
     title: "Service Gateway Service OCID"
     description: "The OCID of the Service Gateway target service"
     required: true

@@ -424,6 +424,7 @@ module "oke-cluster" {
   vcn_id                = module.vcn.vcn_id
   type_of_cluster       = var.type_of_cluster # 'BASIC_CLUSTER' or 'ENHANCED_CLUSTER'
   cni_type              = var.cni_type        # 'FLANNEL' or 'OCI_VCN_IP_NATIVE'
+  kubernetes_version    = var.kubernetes_version
   service_lb_subnet_ids = [module.subnet-lb.subnet_id]
   endpoint_subnet_id    = module.subnet-api-endpoint.subnet_id
 }
@@ -433,6 +434,7 @@ module "oke-node-pool" {
   oke_cluster_id          = module.oke-cluster.cluster_id
   compartment_id          = var.compartment_id
   node_pool_name          = "${var.cluster_name}-node-pool"
+  kubernetes_version      = var.kubernetes_version
   node_shape              = var.pool_node_shape # Eg. 'VM.Standard.E6.Flex'
   node_image_id           = var.pool_node_image_id # Search in: https://docs.oracle.com/en-us/iaas/images/oke-worker-node-oracle-linux-8x/oracle-linux-8.10-gen2-gpu-2025.11.20-0-oke-1.34.2-1345.htm
   ocpus                   = var.ocpus
