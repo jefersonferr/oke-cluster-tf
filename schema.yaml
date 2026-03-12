@@ -157,7 +157,7 @@ variables:
   pool_node_image_id:
     type: string
     title: "Node Image OCID"
-    description: "Image used by worker nodes"
+    description: "Image used by worker nodes: [Oracle Linux 8.10 Gen2 GPU 2025.11.20](https://docs.oracle.com)"
     required: true
 
 

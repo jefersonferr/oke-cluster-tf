@@ -120,6 +120,12 @@ module "sl-subnet-nodes" {
   egress_security_rules = [
     {
       protocol         = "all"
+      destination      = "0.0.0.0/0"
+      destination_type = "CIDR_BLOCK"
+      description      = "Worker Nodes access to Internet"
+    },
+    {
+      protocol         = "all"
       destination      = var.subnet_pods_cidr_19
       destination_type = "CIDR_BLOCK"
       description      = "Allow worker nodes to access pods"
