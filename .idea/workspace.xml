@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="823909a6-7b71-434b-b090-f3bdf01afdbc" name="Changes" comment="Added new rules in sl-nodes and adjusting in schema.yaml">
-      <change beforePath="$PROJECT_DIR$/schema.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/schema.yaml" afterDir="false" />
-    </list>
+    <list default="true" id="823909a6-7b71-434b-b090-f3bdf01afdbc" name="Changes" comment="Adjusting in schema.yaml" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -284,7 +282,15 @@
       <option name="project" value="LOCAL" />
       <updated>1773336090564</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Adjusting in schema.yaml">
+      <option name="closed" value="true" />
+      <created>1773336225211</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1773336225211</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -314,6 +320,7 @@
     <MESSAGE value="image ocid auto lookup schema.yaml" />
     <MESSAGE value="Removing auto lookup node image ocid." />
     <MESSAGE value="Added new rules in sl-nodes and adjusting in schema.yaml" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added new rules in sl-nodes and adjusting in schema.yaml" />
+    <MESSAGE value="Adjusting in schema.yaml" />
+    <option name="LAST_COMMIT_MESSAGE" value="Adjusting in schema.yaml" />
   </component>
 </project>
