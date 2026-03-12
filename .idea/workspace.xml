@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="823909a6-7b71-434b-b090-f3bdf01afdbc" name="Changes" comment="Removing auto lookup node image ocid.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.tf" beforeDir="false" afterPath="$PROJECT_DIR$/main.tf" afterDir="false" />
+    <list default="true" id="823909a6-7b71-434b-b090-f3bdf01afdbc" name="Changes" comment="Added new rules in sl-nodes and adjusting in schema.yaml">
       <change beforePath="$PROJECT_DIR$/schema.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/schema.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/variables.tf" beforeDir="false" afterPath="$PROJECT_DIR$/variables.tf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -263,7 +260,15 @@
       <option name="project" value="LOCAL" />
       <updated>1772855654421</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Added new rules in sl-nodes and adjusting in schema.yaml">
+      <option name="closed" value="true" />
+      <created>1773335576065</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1773335576065</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -292,6 +297,7 @@
     <MESSAGE value="Bug fix outputs.tf" />
     <MESSAGE value="image ocid auto lookup schema.yaml" />
     <MESSAGE value="Removing auto lookup node image ocid." />
-    <option name="LAST_COMMIT_MESSAGE" value="Removing auto lookup node image ocid." />
+    <MESSAGE value="Added new rules in sl-nodes and adjusting in schema.yaml" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added new rules in sl-nodes and adjusting in schema.yaml" />
   </component>
 </project>
