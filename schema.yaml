@@ -2,6 +2,10 @@ schemaVersion: 1.1.0
 version: "2026.03.06"
 locale: "en"
 
+info:
+  title: "OKE Cluster Deployment"
+  description: "Documentation: https://docs.oracle.com/en-us/iaas/images/oke-worker-node-oracle-linux-8x/index.htm"
+
 variableGroups:
 
   - title: "General Configuration"
@@ -157,7 +161,7 @@ variables:
   pool_node_image_id:
     type: string
     title: "Node Image OCID"
-    description: "Image used by worker nodes: [Oracle Linux 8.x Images](https://docs.oracle.com/en-us/iaas/images/oke-worker-node-oracle-linux-8x/index.htm)"
+    description: "OCID of the image used by OKE worker nodes (Oracle Linux 8.x). Documentation: https://docs.oracle.com/en-us/iaas/images/oke-worker-node-oracle-linux-8x/index.htm"
     required: true
 
 
