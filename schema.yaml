@@ -1,3 +1,10 @@
+# Title shown in Application Information tab.
+title: "OCI OKE Infrastructure as Code"
+# Sub Title shown in Application Information tab.
+description: "OCI OKE Infrastructure as Code – Reference Implementation"
+stackDescription: "Terraform-based reference implementation to provision a complete Kubernetes environment on Oracle Cloud Infrastructure (OCI) using Oracle Kubernetes Engine (OKE)."
+informationalText: "The implementation follows the official networking guidance from: Oracle Documentation – Example 3: Cluster with OCI CNI Plugin, Public Kubernetes API Endpoint, Private Worker Nodes, and Public Load Balancers
+Official reference: https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengnetworkconfigexample.htm#example-oci-cni-publick8sapi_privateworkers_publiclb"
 schemaVersion: 1.1.0
 version: "2026.03.06"
 locale: "en"
