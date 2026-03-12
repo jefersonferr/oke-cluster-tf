@@ -61,3 +61,7 @@ variable "size" {
   description = "The number of worker nodes to create in the node pool"
   default     = 2
 }
+variable "ad_name" {
+  type        = string
+  description = "The Availability Domain where the resources will be deployed"
+}

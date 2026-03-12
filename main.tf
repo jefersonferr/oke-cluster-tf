@@ -438,6 +438,7 @@ module "oke-node-pool" {
   source                  = "./modules/oke_node_pool"
   oke_cluster_id          = module.oke-cluster.cluster_id
   compartment_id          = var.compartment_id
+  ad_name                 = var.ad_name
   node_pool_name          = "${var.cluster_name}-node-pool"
   kubernetes_version      = var.kubernetes_version
   node_shape              = var.pool_node_shape # Eg. 'VM.Standard.E6.Flex'

@@ -21,6 +21,7 @@ variableGroups:
     variables:
       - region
       - compartment_id
+      - ad_name
       - cluster_name
       - kubernetes_version
       - type_of_cluster
@@ -58,6 +59,17 @@ variables:
     type: oci:identity:compartment:id
     title: "Compartment OCID"
     description: "The OCID of the compartment where resources will be created"
+    required: true
+
+  ad_name:
+    type: oci:identity:availabilitydomain:name
+    title: "Availability Domain"
+    description: "Availability Domain where the worker nodes will be deployed"
+
+    dependsOn:
+      compartmentId: compartment_id
+      region: region
+
     required: true
 
   cluster_name:

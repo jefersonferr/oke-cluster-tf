@@ -98,3 +98,7 @@ variable "kubernetes_version" {
   type    = string
   default = "v1.34.2"
 }
+variable "ad_name" {
+  type        = string
+  description = "The Availability Domain where the resources will be deployed"
+}

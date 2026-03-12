@@ -24,7 +24,8 @@ resource "oci_containerengine_node_pool" "this" {
 
   node_config_details {
     placement_configs {
-      availability_domain = data.oci_identity_availability_domain.ad.name
+#      availability_domain = data.oci_identity_availability_domain.ad.name
+      availability_domain = var.ad_name
       subnet_id           = var.node_subnet_id
     }
     size = var.size
