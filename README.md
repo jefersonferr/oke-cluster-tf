@@ -1,5 +1,10 @@
 # OCI OKE Infrastructure as Code – Reference Implementation
 
+[![Terraform Validate](https://github.com/jefersonferr/oke-cluster-tf/actions/workflows/terraform-validate.yml/badge.svg)](https://github.com/jefersonferr/oke-cluster-tf/actions/workflows/terraform-validate.yml)
+[![Terraform](https://img.shields.io/badge/Terraform-%3E%3D1.5.0-7B42BC?logo=terraform&logoColor=white)](https://www.terraform.io/)
+[![OCI Provider](https://img.shields.io/badge/OCI_Provider-%3E%3D6.0.0-F80000?logo=oracle&logoColor=white)](https://registry.terraform.io/providers/oracle/oci/latest)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+
 ## Overview
 
 This repository provides a Terraform-based reference implementation to provision a complete Kubernetes environment on **Oracle Cloud Infrastructure (OCI)** using **Oracle Kubernetes Engine (OKE)**.
@@ -14,20 +19,19 @@ The implementation covers all four networking scenarios defined in the official 
 | Example 4 | OCI VCN-Native | Private | [Link](https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengnetworkconfigexample.htm#example-oci-cni-privatek8sapi_privateworkers_publiclb) |
 
 Official reference: [Example Network Resource Configurations](https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengnetworkconfigexample.htm)
- 
+
 ---
 
 ## Scenario Selection
 
 The scenario is determined by two variables:
-
 ```hcl
 cni_type               = "OCI_VCN_IP_NATIVE"  # or "FLANNEL"
 is_api_endpoint_public = true                   # or false
 ```
 
 All networking resources — subnets, route tables, security lists, and gateways — are automatically adjusted based on these two choices. No manual editing of security rules or route tables is needed.
- 
+
 ---
 
 ## Architecture Summary
@@ -91,7 +95,7 @@ All four scenarios share a common foundation: a VCN with Internet Gateway, NAT G
 | Service-only Route Table (SG without NAT) | VCN-Native CNI |
 | Pods Security List | VCN-Native CNI |
 | Pods Subnet | VCN-Native CNI |
- 
+
 ---
 
 ## OKE Configuration
@@ -114,7 +118,6 @@ All four scenarios share a common foundation: a VCN with Internet Gateway, NAT G
 ---
 
 ## Repository Structure
-
 ```
 .
 ├── main.tf              # Root module — orchestrates all resources with conditional logic
@@ -122,20 +125,31 @@ All four scenarios share a common foundation: a VCN with Internet Gateway, NAT G
 ├── outputs.tf           # Outputs including selected scenario description
 ├── provider.tf          # OCI provider configuration
 ├── schema.yaml          # ORM Console form definition with conditional visibility
+├── CONTRIBUTING.md      # Contribution guidelines
+├── LICENSE              # Apache License 2.0
+├── examples/            # tfvars examples for all 4 scenarios
+│   ├── example1-flannel-public.tfvars.example
+│   ├── example2-flannel-private.tfvars.example
+│   ├── example3-vcn-native-public.tfvars.example
+│   └── example4-vcn-native-private.tfvars.example
+├── .github/workflows/
+│   └── terraform-validate.yml   # CI pipeline (fmt + validate)
 ├── modules/
-│   ├── vcn/                    # Virtual Cloud Network
-│   ├── internet_gateway/       # Internet Gateway
-│   ├── network_gateway/        # NAT Gateway
-│   ├── service_gateway/        # Service Gateway
-│   ├── default_route_table/    # Default (public) route table
-│   ├── route_table/            # Custom route tables
-│   ├── default_security_list/  # Default security list (used by LB subnet)
-│   ├── security_list/          # Custom security lists
-│   ├── subnet/                 # Subnet
-│   ├── oke_cluster/            # OKE Cluster
-│   └── oke_node_pool/          # OKE Node Pool
+│   ├── vcn/                     # Virtual Cloud Network
+│   ├── internet_gateway/        # Internet Gateway
+│   ├── network_gateway/         # NAT Gateway
+│   ├── service_gateway/         # Service Gateway
+│   ├── default_route_table/     # Default (public) route table
+│   ├── route_table/             # Custom route tables
+│   ├── default_security_list/   # Default security list (used by LB subnet)
+│   ├── security_list/           # Custom security lists
+│   ├── subnet/                  # Subnet
+│   ├── oke_cluster/             # OKE Cluster
+│   └── oke_node_pool/           # OKE Node Pool
 ```
- 
+
+Each module contains its own `README.md` with auto-generated documentation of inputs, outputs, and resources.
+
 ---
 
 ## Deployment
@@ -153,94 +167,17 @@ This repository includes a `schema.yaml` that provides a guided form experience 
 For detailed deployment instructions, see [oci-deployment.md](oci-deployment.md).
 
 ### Option 2: Terraform CLI
-
 ```bash
+cp examples/example3-vcn-native-public.tfvars.example terraform.tfvars
+# Edit terraform.tfvars with your values
+
 terraform init
 terraform plan
 terraform apply
 ```
- 
----
 
-## Example terraform.tfvars
+Complete `.tfvars.example` files for all four scenarios are available in the [`examples/`](examples/) directory.
 
-### Example 1 — Flannel CNI, Public API Endpoint
-
-```hcl
-region                   = "sa-saopaulo-1"
-compartment_id           = "ocid1.compartment.oc1..example"
-ad_name                  = "xxxx:SA-SAOPAULO-1-AD-1"
-cluster_name             = "oke-flannel-public"
- 
-cni_type                 = "FLANNEL"
-is_api_endpoint_public   = true
-type_of_cluster          = "ENHANCED_CLUSTER"
- 
-vcn_cidr_block_16        = "10.0.0.0/16"
-subnet_lb_cidr_24        = "10.0.0.0/24"
-subnet_api_endpoint_cidr = "10.0.1.0/30"
-subnet_nodes_cidr_24     = "10.0.2.0/24"
- 
-kubernetes_version       = "v1.34.2"
-pool_size                = 2
-pool_node_shape          = "VM.Standard.E6.Flex"
-pool_node_image_id       = "ocid1.image.oc1.sa-saopaulo-1.example"
-ocpus                    = 2
-memory_in_gbs            = 16
-```
-
-### Example 3 — OCI VCN-Native CNI, Public API Endpoint
-
-```hcl
-region                   = "sa-saopaulo-1"
-compartment_id           = "ocid1.compartment.oc1..example"
-ad_name                  = "xxxx:SA-SAOPAULO-1-AD-1"
-cluster_name             = "oke-native-public"
- 
-cni_type                 = "OCI_VCN_IP_NATIVE"
-is_api_endpoint_public   = true
-type_of_cluster          = "ENHANCED_CLUSTER"
- 
-vcn_cidr_block_16        = "10.0.0.0/16"
-subnet_lb_cidr_24        = "10.0.0.0/24"
-subnet_api_endpoint_cidr = "10.0.1.0/29"
-subnet_nodes_cidr_24     = "10.0.2.0/24"
-subnet_pods_cidr_19      = "10.0.32.0/19"
- 
-kubernetes_version       = "v1.34.2"
-pool_size                = 2
-pool_node_shape          = "VM.Standard.E6.Flex"
-pool_node_image_id       = "ocid1.image.oc1.sa-saopaulo-1.example"
-ocpus                    = 2
-memory_in_gbs            = 16
-```
-
-### Example 4 — OCI VCN-Native CNI, Private API Endpoint
-
-```hcl
-region                   = "sa-saopaulo-1"
-compartment_id           = "ocid1.compartment.oc1..example"
-ad_name                  = "xxxx:SA-SAOPAULO-1-AD-1"
-cluster_name             = "oke-native-private"
- 
-cni_type                 = "OCI_VCN_IP_NATIVE"
-is_api_endpoint_public   = false
-type_of_cluster          = "ENHANCED_CLUSTER"
- 
-vcn_cidr_block_16        = "10.0.0.0/16"
-subnet_lb_cidr_24        = "10.0.0.0/24"
-subnet_api_endpoint_cidr = "10.0.1.0/29"
-subnet_nodes_cidr_24     = "10.0.2.0/24"
-subnet_pods_cidr_19      = "10.0.32.0/19"
- 
-kubernetes_version       = "v1.34.2"
-pool_size                = 2
-pool_node_shape          = "VM.Standard.E6.Flex"
-pool_node_image_id       = "ocid1.image.oc1.sa-saopaulo-1.example"
-ocpus                    = 2
-memory_in_gbs            = 16
-```
- 
 ---
 
 ## Outputs
@@ -256,7 +193,7 @@ After a successful apply, the stack outputs the following:
 | `subnet_nodes_id` | OCID of the worker nodes subnet |
 | `subnet_lb_id` | OCID of the load balancer subnet |
 | `subnet_pods_id` | OCID of the pods subnet (null when using Flannel) |
- 
+
 ---
 
 ## Production Recommendations
@@ -267,6 +204,16 @@ After a successful apply, the stack outputs the following:
 - Apply least-privilege IAM policies
 - Integrate with WAF for internet-facing services
 - Consider using Network Security Groups (NSGs) in addition to security lists for finer-grained control
+
+---
+
+## Contributing
+
+Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to submit issues and pull requests.
+
+## License
+
+This project is licensed under the Apache License 2.0. See [LICENSE](LICENSE) for details.
 
 ---
 
