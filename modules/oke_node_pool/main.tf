@@ -24,7 +24,6 @@ resource "oci_containerengine_node_pool" "this" {
 
   node_config_details {
     placement_configs {
-#      availability_domain = data.oci_identity_availability_domain.ad.name
       availability_domain = var.ad_name
       subnet_id           = var.node_subnet_id
     }
@@ -32,7 +31,7 @@ resource "oci_containerengine_node_pool" "this" {
 
     node_pool_pod_network_option_details {
       cni_type       = var.cni_type
-      pod_subnet_ids = var.pod_subnet_ids
+      pod_subnet_ids = var.cni_type == "OCI_VCN_IP_NATIVE" ? var.pod_subnet_ids : []
     }
   }
 }

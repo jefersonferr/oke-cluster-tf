@@ -1,285 +1,302 @@
+# OKE Cluster Deployment with OCI Resource Manager
 
-# OKE Cluster Deployment with OCI Resource Manager and Terraform
-
-This project demonstrates how to deploy a Kubernetes cluster using Terraform and Oracle Cloud Infrastructure (OCI) Resource Manager.
-
-The infrastructure is provisioned using Infrastructure as Code (IaC) and executed directly from the OCI console using a GitHub repository as the Terraform source.
-
-The deployment creates an Oracle Kubernetes Engine (OKE) cluster and supporting infrastructure such as networking and node pools.
+This guide walks through the end-to-end process of deploying an OKE cluster using this Terraform repository and OCI Resource Manager (ORM). The stack supports all four networking scenarios from the official Oracle documentation — the desired scenario is selected directly in the ORM Console form.
 
 ---
 
-# Architecture Overview
+## Prerequisites
 
-The solution provisions a complete Kubernetes environment in Oracle Cloud Infrastructure using Terraform automation.
+### OCI Requirements
 
-The deployed architecture typically includes:
+- An OCI tenancy with an active subscription
+- A compartment where resources will be created
+- IAM policies granting the deploying user (or group) permissions to manage VCNs, subnets, gateways, OKE clusters, and node pools in the target compartment
+- At least one Availability Domain available in the target region
 
-- Virtual Cloud Network (VCN)
-- Public and private subnets
-- Internet Gateway
-- Security Lists / Network Security Groups
-- Oracle Kubernetes Engine cluster
-- Node Pools (worker nodes)
-- Load Balancer for applications
+### Required information before starting
 
-Infrastructure provisioning is executed through OCI Resource Manager, which runs Terraform jobs directly inside OCI.
+- **Compartment OCID** — the target compartment for all resources
+- **Worker Node Image OCID** — the OKE-compatible image for your region and Kubernetes version. Consult the [OKE Worker Node Images](https://docs.oracle.com/en-us/iaas/images/oke-worker-node-oracle-linux-8x/index.htm) documentation
+- **Networking scenario** — decide which combination of CNI plugin and API endpoint exposure you need:
 
----
+| Scenario | `cni_type` | `is_api_endpoint_public` |
+|----------|-----------|--------------------------|
+| Example 1 — Flannel, Public API | `FLANNEL` | `true` |
+| Example 2 — Flannel, Private API | `FLANNEL` | `false` |
+| Example 3 — OCI VCN-Native, Public API | `OCI_VCN_IP_NATIVE` | `true` |
+| Example 4 — OCI VCN-Native, Private API | `OCI_VCN_IP_NATIVE` | `false` |
 
-# Repository
+### Local requirements (for post-deployment verification)
 
-Terraform code used in this guide is available at:
-
-Repository:
-https://github.com/jefersonferr/oke-cluster-tf
-
-Typical Terraform files included:
-
-main.tf
-variables.tf
-outputs.tf
-provider.tf
-versions.tf
-
-These files define the required OCI resources and configuration parameters for the Kubernetes cluster.
+- `kubectl` installed
+- OCI CLI installed and configured (or use OCI Cloud Shell)
 
 ---
 
-# Prerequisites
+## Step 1 — Create the Stack
 
-Before starting, ensure the following requirements are met.
+OCI Resource Manager supports multiple ways to import Terraform configurations. Choose the option that best fits your workflow.
 
-## OCI Requirements
+### Option A — From a ZIP file
 
-- OCI tenancy
-- Compartment for deployment
-- Permissions to create resources
+This is the simplest approach — no GitHub integration required.
 
-## Local Requirements
+1. Go to the GitHub repository page and click **Code → Download ZIP**.
+2. In the OCI Console, navigate to **Developer Services → Resource Manager → Stacks**.
+3. Click **Create Stack**.
+4. Select **My Configuration** as the origin.
+5. Choose **ZIP File** and upload the file downloaded in step 1.
+6. Click **Next**.
 
-- Git
-- kubectl
-- OCI CLI (optional)
+<!-- SCREENSHOT: stack-creation-zip-upload.png -->
+<!-- Caption: Stack creation screen — uploading the repository ZIP file as the Terraform source. -->
 
----
+### Option B — From a GitHub Source Provider
 
-# Step 1 — Configure GitHub Source Provider
+This option connects ORM directly to the GitHub repository, enabling automatic updates when the code changes.
 
-OCI Resource Manager can retrieve Terraform configurations directly from GitHub repositories.
+**1. Create a Source Provider (one-time setup)**
 
-Navigate to:
+If you have already configured a GitHub Source Provider, skip to the next sub-step.
 
-OCI Console → Developer Services → Resource Manager → Source Providers
+1. In the OCI Console, navigate to **Developer Services → Resource Manager → Configuration Source Providers**.
+2. Click **Create Configuration Source Provider**.
+3. Select **GitHub** as the type.
+4. Authenticate with your GitHub account and grant access to the repository.
 
-Create a new provider:
+<!-- SCREENSHOT: source-provider-creation.png -->
+<!-- Caption: Creating a GitHub Source Provider in the OCI Console. -->
 
-1. Click Create Source Provider
-2. Select GitHub
-3. Authenticate your GitHub account
-4. Grant repository access
+**2. Create the Stack from the Source Provider**
 
-Once configured, Resource Manager can clone repositories and execute Terraform jobs.
+1. Navigate to **Developer Services → Resource Manager → Stacks**.
+2. Click **Create Stack**.
+3. Select **Source Code Control System** as the origin.
+4. Configure:
+    - **Source Provider:** the GitHub provider created above
+    - **Repository:** `oke-cluster-tf`
+    - **Branch:** `main`
+    - **Working Directory:** `/`
+5. Click **Next**.
 
----
-
-# Step 2 — Create a Stack from GitHub
-
-Create a stack referencing the Terraform code.
-
-Navigate to:
-
-Developer Services → Resource Manager → Stacks → Create Stack
-
-Choose:
-
-Source Code Control System
-
-Then configure:
-
-- Source Provider: GitHub
-- Repository: oke-cluster-tf
-- Branch: main
-- Working Directory: /
-
-Click **Create Stack**.
-
-The Terraform configuration will be downloaded automatically.
+<!-- SCREENSHOT: stack-creation-source.png -->
+<!-- Caption: Stack creation screen — selecting the GitHub repository as the Terraform source. -->
 
 ---
 
-# Step 3 — Edit Terraform Code (Optional)
-
-OCI Resource Manager provides a built‑in Terraform Code Editor.
-
-This editor allows users to:
-
-- modify Terraform variables
-- update resource parameters
-- customize cluster configuration
-- test infrastructure changes
-
-Common files that may be edited include:
-
-variables.tf
-terraform.tfvars
-main.tf
+Regardless of the option chosen, the ORM Console will parse the `schema.yaml` file and render a guided form for the stack variables, as described in the next step.
 
 ---
 
-# Step 4 — Run Terraform Plan
+## Step 2 — Configure Stack Variables
 
-The Plan action previews infrastructure changes.
+This is where the `schema.yaml` enhances the ORM experience. Instead of manually filling in raw Terraform variable values, the console presents organized form sections with contextual descriptions, dynamic dropdowns, and conditional visibility.
 
-Steps:
+### 2.1 — General Configuration
 
-1. Open the stack
-2. Click Terraform Actions
-3. Select Plan
+This section includes region, compartment, availability domain, cluster name, and Kubernetes version. The compartment and availability domain fields use native OCI lookups — you select from a dropdown populated by your tenancy, instead of pasting OCIDs manually.
 
-Example output:
+<!-- SCREENSHOT: variables-general-config.png -->
+<!-- Caption: General Configuration section — region, compartment, AD, cluster name, and Kubernetes version are populated dynamically by the ORM Console. -->
 
-Plan: 10 to add, 0 to change, 0 to destroy
+### 2.2 — Cluster Architecture
+
+This section controls the networking scenario. Three fields determine the cluster topology:
+
+- **Cluster Type** — `BASIC_CLUSTER` or `ENHANCED_CLUSTER`
+- **CNI Plugin** — `OCI_VCN_IP_NATIVE` or `FLANNEL`
+- **Public Kubernetes API Endpoint** — checkbox (enabled = public, disabled = private)
+
+The combination of **CNI Plugin** and **Public Kubernetes API Endpoint** maps directly to one of the four Oracle documentation examples. All downstream resources (subnets, route tables, security lists) are automatically adjusted.
+
+<!-- SCREENSHOT: variables-cluster-architecture.png -->
+<!-- Caption: Cluster Architecture section — selecting the CNI plugin and API endpoint exposure. These two choices determine the networking scenario. -->
+
+### 2.3 — Network Configuration
+
+This section shows the CIDR blocks for each subnet. The key behavior here is **conditional visibility**: the **Pods Subnet CIDR** field only appears when the CNI plugin is set to `OCI_VCN_IP_NATIVE`. When `FLANNEL` is selected, the field is hidden because Flannel does not require a dedicated pods subnet.
+
+<!-- SCREENSHOT: variables-network-vcn-native.png -->
+<!-- Caption: Network Configuration with OCI VCN-Native CNI selected — the Pods Subnet CIDR field is visible. -->
+
+<!-- SCREENSHOT: variables-network-flannel.png -->
+<!-- Caption: Network Configuration with Flannel CNI selected — the Pods Subnet CIDR field is automatically hidden. -->
+
+This conditional behavior is defined in the `schema.yaml` using the `visible` property:
+
+```yaml
+subnet_pods_cidr_19:
+  type: string
+  title: "Pods Subnet CIDR"
+  visible: ${cni_type == "OCI_VCN_IP_NATIVE"}
+```
+
+For details on schema customization, see the [ORM Schema Documentation](https://docs.oracle.com/en-us/iaas/Content/ResourceManager/Concepts/terraformconfigresourcemanager_topic-schema.htm).
+
+### 2.4 — Node Pool Configuration
+
+This section configures the compute resources: worker node count, shape, OCPUs, memory, and the node image OCID.
+
+<!-- SCREENSHOT: variables-node-pool.png -->
+<!-- Caption: Node Pool Configuration section — shape, sizing, and image selection. -->
+
+After filling in all sections, click **Next** to review, then **Create** to save the stack.
 
 ---
 
-# Step 5 — Apply the Terraform Configuration
+## Step 3 — Review the Stack
+
+After creation, the stack overview shows the selected configuration and the informational text from the `schema.yaml`, which identifies the implemented reference architecture.
+
+<!-- SCREENSHOT: stack-overview.png -->
+<!-- Caption: Stack overview page showing the stack description, variables summary, and available Terraform actions. -->
+
+---
+
+## Step 4 — Run Terraform Plan
+
+The Plan action previews all resources that will be created without making any changes.
+
+1. On the stack page, click **Terraform Actions → Plan**.
+2. Wait for the job to complete.
+3. Review the plan output.
+
+The number of resources varies by scenario:
+
+| Scenario | Expected resources |
+|----------|-------------------|
+| Flannel (Examples 1, 2) | ~12 resources (no pods subnet, no pods security list, no service-only route table) |
+| VCN-Native (Examples 3, 4) | ~15 resources (includes pods subnet, pods security list, and service-only route table) |
+
+<!-- SCREENSHOT: plan-execution.png -->
+<!-- Caption: Terraform Plan output — showing the number of resources to be created. The count varies depending on the selected CNI plugin. -->
+
+---
+
+## Step 5 — Apply the Configuration
 
 After reviewing the plan:
 
-Terraform Actions → Apply
+1. Click **Terraform Actions → Apply**.
+2. Confirm the action.
+3. Wait for the job to complete. Typical provisioning time is 10–15 minutes.
 
-OCI Resource Manager will execute the deployment.
+<!-- SCREENSHOT: apply-in-progress.png -->
+<!-- Caption: Apply job in progress — ORM provisions all networking resources, the OKE cluster, and the node pool. -->
 
-Resources created may include:
+<!-- SCREENSHOT: apply-completed.png -->
+<!-- Caption: Apply job completed successfully — all resources created. -->
 
-- VCN
-- Subnets
-- OKE cluster
-- Node pools
-- Security components
+### Reviewing Outputs
 
----
+After the apply completes, the **Outputs** tab shows the values defined in `outputs.tf`, including the `scenario_description` that confirms which Oracle documentation example was provisioned.
 
-# Step 6 — Verify the OKE Cluster
-
-Navigate to:
-
-Developer Services → Kubernetes Clusters (OKE)
-
-You should see:
-
-- the new cluster
-- node pools
-- worker nodes
-
-Expected status:
-
-ACTIVE
+<!-- SCREENSHOT: apply-outputs.png -->
+<!-- Caption: Stack outputs — the scenario_description confirms the selected networking scenario (e.g., "Example 3 — OCI VCN-Native CNI, Public Kubernetes API Endpoint"). -->
 
 ---
 
-# Step 7 — Connect Using Cloud Shell
+## Step 6 — Verify the OKE Cluster
 
-Open the cluster page and go to Quick Start.
+1. Navigate to **Developer Services → Kubernetes Clusters (OKE)**.
+2. Verify that the cluster status is **ACTIVE**.
+3. Check the node pool and confirm the worker nodes are in **ACTIVE** state.
 
-Run the command:
+<!-- SCREENSHOT: oke-cluster-active.png -->
+<!-- Caption: OKE cluster in ACTIVE state in the OCI Console. -->
 
-```
-oci ce cluster create-kubeconfig --cluster-id <cluster_ocid> --file $HOME/.kube/config --region <region> --token-version 2.0.0
+<!-- SCREENSHOT: oke-node-pool-active.png -->
+<!-- Caption: Node pool details showing active worker nodes. -->
+
+### Verifying the Network Topology
+
+Navigate to **Networking → Virtual Cloud Networks** and inspect the VCN created by the stack. Verify that:
+
+- The subnets match the expected scenario (3 subnets for Flannel, 4 for VCN-Native)
+- The route tables are correctly assigned (public vs. private, service-only for VCN-Native workers)
+- The security lists contain the expected rules
+
+<!-- SCREENSHOT: vcn-subnets-overview.png -->
+<!-- Caption: VCN subnets created by the stack — showing the subnet visibility (public/private) and associated route tables. -->
+
+---
+
+## Step 7 — Connect to the Cluster
+
+### Using OCI Cloud Shell
+
+Open the cluster details page and click **Access Cluster → Cloud Shell Access**. Run the provided command:
+
+```bash
+oci ce cluster create-kubeconfig \
+  --cluster-id <cluster_ocid> \
+  --file $HOME/.kube/config \
+  --region <region> \
+  --token-version 2.0.0
 ```
 
 Verify connectivity:
 
-```
-kubectl version --short
-```
-
----
-
-# Step 8 — Deploy Sample Application
-
-Deploy a sample application:
-
-```
-kubectl create deployment sample-app --image=nginx
-```
-
-Expose the application:
-
-```
-kubectl expose deployment sample-app --type=LoadBalancer --port=80
-```
-
----
-
-# Step 9 — Inspect Kubernetes Resources
-
-List cluster nodes:
-
-```
+```bash
 kubectl get nodes
 ```
 
-List pods:
+Expected output: worker nodes in `Ready` status.
 
-```
-kubectl get pods -o wide
-```
+<!-- SCREENSHOT: cloud-shell-kubectl.png -->
+<!-- Caption: Cloud Shell session showing successful kubectl connection and worker nodes in Ready status. -->
 
-List deployments:
-
-```
-kubectl get deployments
-```
-
-List services:
-
-```
-kubectl get services
-```
+> **Note:** If the API endpoint is private (Examples 2 and 4), Cloud Shell access requires that the Cloud Shell network can reach the private endpoint. You may need to use OCI Bastion, VPN, or FastConnect instead.
 
 ---
 
-# Step 10 — Destroy Infrastructure
+## Step 8 — Deploy a Sample Application (Optional)
 
-Navigate to:
+Deploy a sample application to validate the cluster:
 
-Resource Manager → Stacks
+```bash
+kubectl create deployment sample-app --image=nginx
+kubectl expose deployment sample-app --type=LoadBalancer --port=80
+```
 
-Select the stack and execute:
+Wait for the load balancer to be provisioned:
 
-Terraform Actions → Destroy
+```bash
+kubectl get services -w
+```
 
-Terraform will delete all resources created during the deployment.
-
----
-
-# Advantages of Using Infrastructure as Code
-
-Automation – Infrastructure deployment without manual steps.
-
-Repeatability – Infrastructure environments recreated consistently.
-
-Version Control – Infrastructure stored in Git repositories.
-
-DevOps Integration – Integration with CI/CD pipelines.
+Once the `EXTERNAL-IP` is assigned, access the application in your browser.
 
 ---
 
-# Conclusion
+## Step 9 — Destroy Infrastructure
 
-This guide demonstrated the full lifecycle of deploying a Kubernetes cluster using Terraform and OCI Resource Manager.
+When the environment is no longer needed:
 
-The process included:
+1. Navigate to **Resource Manager → Stacks**.
+2. Select the stack.
+3. Click **Terraform Actions → Destroy**.
+4. Confirm the action.
 
-- configuring a GitHub source provider
-- creating a stack from a Terraform repository
-- executing Terraform Plan and Apply
-- deploying an OKE cluster
-- connecting using Cloud Shell
-- deploying a Kubernetes application
-- inspecting cluster resources
-- destroying infrastructure
+All resources created by the stack will be removed.
 
-By combining Terraform, GitHub, and OCI Resource Manager, teams can implement a modern Infrastructure as Code workflow that accelerates cloud adoption and improves operational consistency.
+<!-- SCREENSHOT: destroy-completed.png -->
+<!-- Caption: Destroy job completed — all resources removed. -->
+
+---
+
+## Schema.yaml — Extending the ORM Console Experience
+
+The `schema.yaml` file is what transforms the ORM deployment from a raw variable form into a guided, context-aware experience. Key features used in this stack:
+
+**Variable grouping** — variables are organized into logical sections (General, Cluster Architecture, Network, Node Pool) instead of being presented as a flat list.
+
+**OCI-native types** — fields like `compartment_id` and `ad_name` use OCI-specific types (`oci:identity:compartment:id`, `oci:identity:availabilitydomain:name`) that render as dynamic dropdowns populated from the tenancy.
+
+**Conditional visibility** — the Pods Subnet CIDR field is hidden when Flannel is selected, reducing visual noise and preventing configuration errors.
+
+**Validation patterns** — CIDR fields use regex patterns to prevent malformed input.
+
+**Contextual descriptions** — each field includes a description that explains its purpose and constraints.
+
+For full documentation on schema capabilities, see the [ORM Schema Reference](https://docs.oracle.com/en-us/iaas/Content/ResourceManager/Concepts/terraformconfigresourcemanager_topic-schema.htm).

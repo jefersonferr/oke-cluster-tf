@@ -47,7 +47,8 @@ variable "boot_volume_size_in_gbs" {
 
 variable "pod_subnet_ids" {
   type        = list(string)
-  description = "A list of OCIDs for the subnets where pods will receive native VCN IP addresses"
+  description = "A list of OCIDs for the subnets where pods will receive native VCN IP addresses. Required for OCI_VCN_IP_NATIVE, empty for FLANNEL."
+  default     = []
 }
 
 variable "cni_type" {

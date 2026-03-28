@@ -4,255 +4,274 @@
 
 This repository provides a Terraform-based reference implementation to provision a complete Kubernetes environment on **Oracle Cloud Infrastructure (OCI)** using **Oracle Kubernetes Engine (OKE)**.
 
-The implementation follows the official networking guidance from:
+The implementation covers all four networking scenarios defined in the official Oracle documentation, selectable through two configuration variables:
 
-**Oracle Documentation – Example 3:**
-*Cluster with OCI CNI Plugin, Public Kubernetes API Endpoint, Private Worker Nodes, and Public Load Balancers*
+| Scenario | CNI Plugin | API Endpoint | Oracle Documentation |
+|----------|-----------|-------------|----------------------|
+| Example 1 | Flannel | Public | [Link](https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengnetworkconfigexample.htm#example-flannel-cni-publick8sapi_privateworkers_publiclb) |
+| Example 2 | Flannel | Private | [Link](https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengnetworkconfigexample.htm#example-flannel-cni-privatek8sapi_privateworkers_publiclb) |
+| Example 3 | OCI VCN-Native | Public | [Link](https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengnetworkconfigexample.htm#example-oci-cni-publick8sapi_privateworkers_publiclb) |
+| Example 4 | OCI VCN-Native | Private | [Link](https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengnetworkconfigexample.htm#example-oci-cni-privatek8sapi_privateworkers_publiclb) |
 
-Official reference:
-https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengnetworkconfigexample.htm#example-oci-cni-publick8sapi_privateworkers_publiclb
-
-Platform references:
-
-* Oracle Cloud Infrastructure
-* Oracle Kubernetes Engine
-
+Official reference: [Example Network Resource Configurations](https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengnetworkconfigexample.htm)
+ 
 ---
 
-# Architecture Summary
+## Scenario Selection
 
-This repository provisions a production-ready OKE cluster with:
-
-* Public Kubernetes API Endpoint
-* Private Worker Nodes
-* Public Load Balancers
-* OCI VCN-Native CNI Plugin (`OCI_VCN_IP_NATIVE`)
-* Dedicated Pod Subnet
-* Service Gateway access to OCI services
-* NAT Gateway for private outbound traffic
-
-This architecture ensures:
-
-* Secure segmentation between control plane, nodes, and pods
-* Explicit ingress and egress control
-* Internet exposure only where required
-
----
-
-# Infrastructure Components
-
-## Networking
-
-* VCN (`/16`)
-* Internet Gateway
-* NAT Gateway
-* Service Gateway
-* Public Route Table
-* Private Route Table
-* Dedicated Security Lists per subnet
-* Four Subnets:
-
-  * Load Balancer (`/24`)
-  * API Endpoint (`/29`)
-  * Worker Nodes (`/24`)
-  * Pods (`/19`)
-
----
-
-# OKE Configuration
-
-## Cluster
-
-* Type: `BASIC_CLUSTER` or `ENHANCED_CLUSTER`
-* CNI: `OCI_VCN_IP_NATIVE`
-* Public Kubernetes API endpoint
-* Dedicated endpoint subnet
-* Service LB subnet configured
-
-## Node Pool
-
-* Configurable shape
-* Flexible OCPU and memory sizing
-* Worker nodes deployed in private subnet
-* Pod subnet attached
-* Configurable node count
-
----
-
-# OKE Cluster Deployment with OCI Resource Manager and Terraform
-[Deploy this repository](oci-deployment.md)
-
----
-
-# Terraform Input Variables
-
-Below are the required and configurable variables supported by this repository.
-
----
-
-## Core Configuration
+The scenario is determined by two variables:
 
 ```hcl
-variable "region" {
-  type        = string
-  description = "The OCI region where resources will be created (e.g., sa-saopaulo-1)"
-}
-
-variable "compartment_id" {
-  type        = string
-  description = "The OCID of the compartment where resource will be created"
-}
-
-variable "cluster_name" {
-  type        = string
-  description = "The display name of the OKE cluster"
-}
+cni_type               = "OCI_VCN_IP_NATIVE"  # or "FLANNEL"
+is_api_endpoint_public = true                   # or false
 ```
+
+All networking resources — subnets, route tables, security lists, and gateways — are automatically adjusted based on these two choices. No manual editing of security rules or route tables is needed.
+ 
+---
+
+## Architecture Summary
+
+All four scenarios share a common foundation: a VCN with Internet Gateway, NAT Gateway, Service Gateway, private worker nodes, and public load balancers. The differences are:
+
+### CNI Plugin axis
+
+**Flannel (Examples 1 and 2):**
+- Pods use an overlay network and share the worker node IP addresses.
+- Three subnets are created: Load Balancer, API Endpoint, and Worker Nodes.
+- Worker nodes route through NAT Gateway + Service Gateway.
+- Pod-to-pod communication rules are applied on the worker nodes subnet.
+
+**OCI VCN-Native (Examples 3 and 4):**
+- Pods receive native VCN IP addresses from a dedicated subnet.
+- Four subnets are created: Load Balancer, API Endpoint, Worker Nodes, and Pods.
+- Worker nodes route through Service Gateway only (no NAT).
+- Pods subnet routes through NAT Gateway + Service Gateway.
+- Dedicated security list controls pod ingress and egress.
+
+### API Endpoint axis
+
+**Public (Examples 1 and 3):**
+- API endpoint subnet is public, routed through Internet Gateway.
+- A public IP is assigned to the Kubernetes API endpoint.
+- Security list allows ingress on port 6443 from `0.0.0.0/0`.
+
+**Private (Examples 2 and 4):**
+- API endpoint subnet is private, routed through NAT Gateway + Service Gateway.
+- No public IP is assigned.
+- Access to the API endpoint requires VPN, peering, or OCI Bastion.
 
 ---
 
-## Network Configuration
+## Infrastructure Components
 
-```hcl
-variable "vcn_cidr_block_16" {
-  type        = string
-  description = "IPv4 CIDR /16 block for the VCN, providing 65,536 addresses (e.g., 10.0.0.0/16)"
-}
+### Networking (all scenarios)
 
-variable "subnet_lb_cidr_24" {
-  type        = string
-  description = "IPv4 CIDR /24 block for the Load Balancer subnet, providing 256 addresses (e.g., 10.0.0.0/24)"
-}
+- VCN (`/16`)
+- Internet Gateway
+- NAT Gateway
+- Service Gateway
+- Public Route Table (Internet Gateway)
+- Private Route Table (NAT + Service Gateway)
+- Dedicated Security Lists per subnet
 
-variable "subnet_api_endpoint_cidr_29" {
-  type        = string
-  description = "IPv4 CIDR /29 block for the Kubernetes API Endpoint subnet, providing 8 addresses (e.g., 10.0.1.0/29)"
-}
+### Subnets
 
-variable "subnet_nodes_cidr_24" {
-  type        = string
-  description = "IPv4 CIDR /24 block for the Worker Nodes subnet, providing 256 addresses (e.g., 10.0.2.0/24)"
-}
+| Subnet | CIDR | Visibility | Created |
+|--------|------|-----------|---------|
+| Load Balancer | `/24` | Public | Always |
+| API Endpoint | `/29` or `/30` | Public or Private | Always |
+| Worker Nodes | `/24` | Private | Always |
+| Pods | `/19` | Private | VCN-Native CNI only |
 
-variable "subnet_pods_cidr_19" {
-  type        = string
-  description = "IPv4 CIDR /19 block for the Native Pods subnet, providing 8,192 addresses (e.g., 10.0.32.0/19)"
-}
-```
+### Additional resources (conditional)
+
+| Resource | Condition |
+|----------|-----------|
+| Service-only Route Table (SG without NAT) | VCN-Native CNI |
+| Pods Security List | VCN-Native CNI |
+| Pods Subnet | VCN-Native CNI |
+ 
+---
+
+## OKE Configuration
+
+### Cluster
+
+- Type: `BASIC_CLUSTER` or `ENHANCED_CLUSTER`
+- CNI: `FLANNEL` or `OCI_VCN_IP_NATIVE`
+- API endpoint: public or private
+- Dedicated endpoint subnet
+- Service LB subnet configured
+
+### Node Pool
+
+- Configurable shape (Flex shapes with custom OCPU and memory)
+- Worker nodes deployed in private subnet
+- Pod subnet attached when using VCN-Native CNI
+- Configurable node count
 
 ---
 
-## Cluster Options
+## Repository Structure
 
-```hcl
-variable "type_of_cluster" {
-  type        = string
-  description = "Type of cluster OKE: BASIC_CLUSTER or ENHANCED_CLUSTER"
-  default     = "ENHANCED_CLUSTER"
-
-  validation {
-    condition     = contains(["BASIC_CLUSTER", "ENHANCED_CLUSTER"], var.type_of_cluster)
-    error_message = "The value must be 'BASIC_CLUSTER' or 'ENHANCED_CLUSTER'"
-  }
-}
-
-variable "cni_type" {
-  type        = string
-  description = "The CNI plugin type for the cluster (e.g., FLANNEL or OCI_VCN_IP_NATIVE)"
-  default     = "OCI_VCN_IP_NATIVE"
-
-  validation {
-    condition     = contains(["FLANNEL", "OCI_VCN_IP_NATIVE"], var.cni_type)
-    error_message = "The CNI type must be 'FLANNEL' or 'OCI_VCN_IP_NATIVE'"
-  }
-}
 ```
-
+.
+├── main.tf              # Root module — orchestrates all resources with conditional logic
+├── variables.tf         # Input variables
+├── outputs.tf           # Outputs including selected scenario description
+├── provider.tf          # OCI provider configuration
+├── schema.yaml          # ORM Console form definition with conditional visibility
+├── modules/
+│   ├── vcn/                    # Virtual Cloud Network
+│   ├── internet_gateway/       # Internet Gateway
+│   ├── network_gateway/        # NAT Gateway
+│   ├── service_gateway/        # Service Gateway
+│   ├── default_route_table/    # Default (public) route table
+│   ├── route_table/            # Custom route tables
+│   ├── default_security_list/  # Default security list (used by LB subnet)
+│   ├── security_list/          # Custom security lists
+│   ├── subnet/                 # Subnet
+│   ├── oke_cluster/            # OKE Cluster
+│   └── oke_node_pool/          # OKE Node Pool
+```
+ 
 ---
 
-## Node Pool Configuration
+## Deployment
 
-```hcl
-variable "pool_size" {
-  type        = number
-  description = "The number of worker nodes in the node pool."
-  default     = 2
+### Option 1: OCI Resource Manager (ORM)
 
-  validation {
-    condition     = var.pool_size >= 0
-    error_message = "The pool_size must be a non-negative integer."
-  }
-}
+This repository includes a `schema.yaml` that provides a guided form experience in the ORM Console. The form dynamically adjusts based on your selections — for example, the Pods Subnet CIDR field is only shown when the CNI is set to OCI VCN-Native.
 
-variable "pool_node_shape" {
-  description = "The shape of the nodes in the node pool, defining the CPU and memory architecture."
-  type        = string
-  default     = "VM.Standard.E6.Flex"
-}
+1. In the OCI Console, navigate to **Developer Services → Resource Manager → Stacks**.
+2. Create a new stack from a ZIP file or GitHub repository URL.
+3. Fill in the form fields — the scenario is determined by the **CNI Plugin** and **Public Kubernetes API Endpoint** selections.
+4. Run **Plan** to review the resources that will be created.
+5. Run **Apply** to provision the infrastructure.
 
-variable "pool_node_image_id" {
-  description = "The OCID of the image to be used for the nodes in the node pool."
-  type        = string
-}
+For detailed deployment instructions, see [oci-deployment.md](oci-deployment.md).
 
-variable "ocpus" {
-  description = "The number of OCPUs to be assigned to each node when using a flexible shape."
-  type        = number
-  default     = 2
-}
-
-variable "memory_in_gbs" {
-  description = "The amount of memory in GBs to be assigned to each node when using a flexible shape."
-  type        = number
-  default     = 16
-}
-```
-
----
-
-# Example terraform.tfvars
-
-```hcl
-region                        = "sa-saopaulo-1"
-compartment_id                = "ocid1.compartment.oc1..example"
-cluster_name                  = "oke-demo"
-
-vcn_cidr_block_16             = "10.6.0.0/16"
-subnet_lb_cidr_24             = "10.6.0.0/24"
-subnet_api_endpoint_cidr_29   = "10.6.3.0/29"
-subnet_nodes_cidr_24          = "10.6.1.0/24"
-subnet_pods_cidr_19           = "10.6.32.0/19"
-
-type_of_cluster               = "ENHANCED_CLUSTER"
-cni_type                      = "OCI_VCN_IP_NATIVE"
-
-pool_size                     = 2
-pool_node_shape               = "VM.Standard.E6.Flex"
-pool_node_image_id            = "ocid1.image.oc1.sa-saopaulo-1.example"
-ocpus                         = 2
-memory_in_gbs                 = 16
-```
-
----
-
-# Deployment
+### Option 2: Terraform CLI
 
 ```bash
 terraform init
 terraform plan
 terraform apply
 ```
+ 
+---
+
+## Example terraform.tfvars
+
+### Example 1 — Flannel CNI, Public API Endpoint
+
+```hcl
+region                   = "sa-saopaulo-1"
+compartment_id           = "ocid1.compartment.oc1..example"
+ad_name                  = "xxxx:SA-SAOPAULO-1-AD-1"
+cluster_name             = "oke-flannel-public"
+ 
+cni_type                 = "FLANNEL"
+is_api_endpoint_public   = true
+type_of_cluster          = "ENHANCED_CLUSTER"
+ 
+vcn_cidr_block_16        = "10.0.0.0/16"
+subnet_lb_cidr_24        = "10.0.0.0/24"
+subnet_api_endpoint_cidr = "10.0.1.0/30"
+subnet_nodes_cidr_24     = "10.0.2.0/24"
+ 
+kubernetes_version       = "v1.34.2"
+pool_size                = 2
+pool_node_shape          = "VM.Standard.E6.Flex"
+pool_node_image_id       = "ocid1.image.oc1.sa-saopaulo-1.example"
+ocpus                    = 2
+memory_in_gbs            = 16
+```
+
+### Example 3 — OCI VCN-Native CNI, Public API Endpoint
+
+```hcl
+region                   = "sa-saopaulo-1"
+compartment_id           = "ocid1.compartment.oc1..example"
+ad_name                  = "xxxx:SA-SAOPAULO-1-AD-1"
+cluster_name             = "oke-native-public"
+ 
+cni_type                 = "OCI_VCN_IP_NATIVE"
+is_api_endpoint_public   = true
+type_of_cluster          = "ENHANCED_CLUSTER"
+ 
+vcn_cidr_block_16        = "10.0.0.0/16"
+subnet_lb_cidr_24        = "10.0.0.0/24"
+subnet_api_endpoint_cidr = "10.0.1.0/29"
+subnet_nodes_cidr_24     = "10.0.2.0/24"
+subnet_pods_cidr_19      = "10.0.32.0/19"
+ 
+kubernetes_version       = "v1.34.2"
+pool_size                = 2
+pool_node_shape          = "VM.Standard.E6.Flex"
+pool_node_image_id       = "ocid1.image.oc1.sa-saopaulo-1.example"
+ocpus                    = 2
+memory_in_gbs            = 16
+```
+
+### Example 4 — OCI VCN-Native CNI, Private API Endpoint
+
+```hcl
+region                   = "sa-saopaulo-1"
+compartment_id           = "ocid1.compartment.oc1..example"
+ad_name                  = "xxxx:SA-SAOPAULO-1-AD-1"
+cluster_name             = "oke-native-private"
+ 
+cni_type                 = "OCI_VCN_IP_NATIVE"
+is_api_endpoint_public   = false
+type_of_cluster          = "ENHANCED_CLUSTER"
+ 
+vcn_cidr_block_16        = "10.0.0.0/16"
+subnet_lb_cidr_24        = "10.0.0.0/24"
+subnet_api_endpoint_cidr = "10.0.1.0/29"
+subnet_nodes_cidr_24     = "10.0.2.0/24"
+subnet_pods_cidr_19      = "10.0.32.0/19"
+ 
+kubernetes_version       = "v1.34.2"
+pool_size                = 2
+pool_node_shape          = "VM.Standard.E6.Flex"
+pool_node_image_id       = "ocid1.image.oc1.sa-saopaulo-1.example"
+ocpus                    = 2
+memory_in_gbs            = 16
+```
+ 
+---
+
+## Outputs
+
+After a successful apply, the stack outputs the following:
+
+| Output | Description |
+|--------|-------------|
+| `scenario_description` | Human-readable description of the selected scenario (e.g., "Example 3 — OCI VCN-Native CNI, Public Kubernetes API Endpoint") |
+| `cluster_id` | OCID of the OKE cluster |
+| `vcn_id` | OCID of the VCN |
+| `subnet_api_endpoint_id` | OCID of the API endpoint subnet |
+| `subnet_nodes_id` | OCID of the worker nodes subnet |
+| `subnet_lb_id` | OCID of the load balancer subnet |
+| `subnet_pods_id` | OCID of the pods subnet (null when using Flannel) |
+ 
+---
+
+## Production Recommendations
+
+- Restrict Kubernetes API endpoint access to specific CIDRs instead of `0.0.0.0/0`
+- Remove SSH ingress rule (port 22) if not required
+- Enable OKE audit logging
+- Apply least-privilege IAM policies
+- Integrate with WAF for internet-facing services
+- Consider using Network Security Groups (NSGs) in addition to security lists for finer-grained control
 
 ---
 
-# Production Recommendations
+## References
 
-* Restrict Kubernetes API endpoint CIDR access
-* Remove SSH if not required
-* Enable OKE audit logging
-* Apply least-privilege IAM policies
-* Integrate with WAF for internet-facing services
-
----
-
-This repository translates Oracle’s official Example 3 networking architecture into modular, reusable Terraform code and provides a strong foundation for enterprise-grade OKE deployments.
+- [OKE Network Resource Configuration Examples](https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengnetworkconfigexample.htm)
+- [ORM Schema Configuration](https://docs.oracle.com/en-us/iaas/Content/ResourceManager/Concepts/terraformconfigresourcemanager_topic-schema.htm)
+- [OKE Worker Node Images](https://docs.oracle.com/en-us/iaas/images/oke-worker-node-oracle-linux-8x/index.htm)

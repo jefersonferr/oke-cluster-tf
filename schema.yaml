@@ -2,18 +2,30 @@
 title: "OCI OKE Infrastructure as Code"
 # Sub Title shown in Application Information tab.
 description: "OCI OKE Infrastructure as Code – Reference Implementation"
-stackDescription: "Terraform-based reference implementation to provision a complete Kubernetes environment on Oracle Cloud Infrastructure (OCI) using Oracle Kubernetes Engine (OKE)."
+stackDescription: |
+  Terraform-based reference implementation to provision a complete Kubernetes
+  environment on Oracle Cloud Infrastructure (OCI) using Oracle Kubernetes Engine (OKE).
+
+  Supports all four networking scenarios from the official Oracle documentation:
+
+    Example 1 — Flannel CNI, Public API Endpoint
+    Example 2 — Flannel CNI, Private API Endpoint
+    Example 3 — OCI VCN-Native CNI, Public API Endpoint
+    Example 4 — OCI VCN-Native CNI, Private API Endpoint
+
 informationalText: |
-  The implementation follows the official networking guidance from:
+  This stack implements the official networking guidance from Oracle Documentation:
+  https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengnetworkconfigexample.htm
 
-  Oracle Documentation – Example 3: Cluster with OCI CNI Plugin, Public Kubernetes API Endpoint,
-  Private Worker Nodes, and Public Load Balancers.
+  Select the CNI Plugin and API Endpoint exposure to match your desired scenario.
 
-  Official reference:
-  https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengnetworkconfigexample.htm#example-oci-cni-publick8sapi_privateworkers_publiclb
 schemaVersion: 1.1.0
-version: "2026.03.06"
+version: "2026.03.28"
 locale: "en"
+
+# =============================================================================
+# Variable Groups — controls form layout in ORM Console
+# =============================================================================
 
 variableGroups:
 
@@ -24,14 +36,19 @@ variableGroups:
       - ad_name
       - cluster_name
       - kubernetes_version
+
+  - title: "Cluster Architecture"
+    description: "Choose the CNI plugin and API endpoint exposure to match one of the four reference scenarios from Oracle documentation."
+    variables:
       - type_of_cluster
       - cni_type
+      - is_api_endpoint_public
 
   - title: "Network Configuration"
     variables:
       - vcn_cidr_block_16
       - subnet_lb_cidr_24
-      - subnet_api_endpoint_cidr_29
+      - subnet_api_endpoint_cidr
       - subnet_nodes_cidr_24
       - subnet_pods_cidr_19
 
@@ -43,7 +60,15 @@ variableGroups:
       - memory_in_gbs
       - pool_node_image_id
 
+# =============================================================================
+# Variable Definitions
+# =============================================================================
+
 variables:
+
+  # ---------------------------------------------------------------------------
+  # General Configuration
+  # ---------------------------------------------------------------------------
 
   region:
     type: enum
@@ -65,11 +90,9 @@ variables:
     type: oci:identity:availabilitydomain:name
     title: "Availability Domain"
     description: "Availability Domain where the worker nodes will be deployed"
-
     dependsOn:
       compartmentId: compartment_id
       region: region
-
     required: true
 
   cluster_name:
@@ -82,12 +105,14 @@ variables:
     type: string
     title: "Kubernetes Version"
     description: "The Kubernetes version used for the OKE control plane and worker nodes"
-
     dependsOn:
       compartmentId: compartment_id
       region: region
-
     default: "v1.34.2"
+
+  # ---------------------------------------------------------------------------
+  # Cluster Architecture
+  # ---------------------------------------------------------------------------
 
   type_of_cluster:
     type: enum
@@ -102,12 +127,30 @@ variables:
   cni_type:
     type: enum
     title: "CNI Plugin"
-    description: "Networking plugin used by Kubernetes"
+    description: |
+      Kubernetes networking plugin.
+      FLANNEL: overlay networking, pods share worker node IPs (Examples 1 and 2).
+      OCI_VCN_IP_NATIVE: pods receive native VCN IPs from a dedicated subnet (Examples 3 and 4).
     default: "OCI_VCN_IP_NATIVE"
     required: true
     enum:
       - OCI_VCN_IP_NATIVE
       - FLANNEL
+
+  is_api_endpoint_public:
+    type: boolean
+    title: "Public Kubernetes API Endpoint"
+    description: |
+      When enabled, the API endpoint is placed in a public subnet with a public IP,
+      allowing direct access from the internet (Examples 1 and 3).
+      When disabled, the API endpoint is placed in a private subnet,
+      accessible only within the VCN or via Bastion/VPN (Examples 2 and 4).
+    default: true
+    required: true
+
+  # ---------------------------------------------------------------------------
+  # Network Configuration
+  # ---------------------------------------------------------------------------
 
   vcn_cidr_block_16:
     type: string
@@ -120,23 +163,22 @@ variables:
   subnet_lb_cidr_24:
     type: string
     title: "Load Balancer Subnet CIDR"
-    description: "Subnet used by OCI Load Balancers"
+    description: "Public subnet used by OCI Load Balancers"
     default: "10.0.0.0/24"
     pattern: "^([0-9]{1,3}\\.){3}[0-9]{1,3}/24$"
     required: true
 
-  subnet_api_endpoint_cidr_29:
+  subnet_api_endpoint_cidr:
     type: string
     title: "API Endpoint Subnet CIDR"
-    description: "Subnet used by Kubernetes API endpoint"
+    description: "Subnet used by the Kubernetes API endpoint. Use /29 for OCI VCN-Native CNI or /30 for Flannel CNI."
     default: "10.0.1.0/29"
-    pattern: "^([0-9]{1,3}\\.){3}[0-9]{1,3}/29$"
     required: true
 
   subnet_nodes_cidr_24:
     type: string
     title: "Worker Nodes Subnet CIDR"
-    description: "Subnet used by worker nodes"
+    description: "Private subnet used by worker nodes"
     default: "10.0.2.0/24"
     pattern: "^([0-9]{1,3}\\.){3}[0-9]{1,3}/24$"
     required: true
@@ -144,10 +186,15 @@ variables:
   subnet_pods_cidr_19:
     type: string
     title: "Pods Subnet CIDR"
-    description: "Subnet used by Kubernetes native pods"
+    description: "Private subnet used by Kubernetes native pods. Only required when CNI is OCI VCN-Native."
     default: "10.0.32.0/19"
     pattern: "^([0-9]{1,3}\\.){3}[0-9]{1,3}/19$"
     required: true
+    visible: ${cni_type == "OCI_VCN_IP_NATIVE"}
+
+  # ---------------------------------------------------------------------------
+  # Node Pool Configuration
+  # ---------------------------------------------------------------------------
 
   pool_size:
     type: number
@@ -184,5 +231,3 @@ variables:
     title: "Node Image OCID"
     description: "OCID of the image used by OKE worker nodes (Oracle Linux 8.x). Documentation: https://docs.oracle.com/en-us/iaas/images/oke-worker-node-oracle-linux-8x/index.htm"
     required: true
-
-
