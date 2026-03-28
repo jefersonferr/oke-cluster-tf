@@ -112,11 +112,8 @@ The combination of **CNI Plugin** and **Public Kubernetes API Endpoint** maps di
 This section shows the CIDR blocks for each subnet. The key behavior here is **conditional visibility**: the **Pods Subnet CIDR** field only appears when the CNI plugin is set to `OCI_VCN_IP_NATIVE`. When `FLANNEL` is selected, the field is hidden because Flannel does not require a dedicated pods subnet.
 
 ![Network Configuration with OCI VCN-Native CNI selected — the Pods Subnet CIDR field is visible.](./images/variables-network-vcn-native.png)
-<!-- SCREENSHOT: variables-network-vcn-native.png -->
-<!-- Caption: Network Configuration with OCI VCN-Native CNI selected — the Pods Subnet CIDR field is visible. -->
 
-<!-- SCREENSHOT: variables-network-flannel.png -->
-<!-- Caption: Network Configuration with Flannel CNI selected — the Pods Subnet CIDR field is automatically hidden. -->
+![Network Configuration with Flannel CNI selected — the Pods Subnet CIDR field is automatically hidden.](./images/variables-network-flannel.png)
 
 This conditional behavior is defined in the `schema.yaml` using the `visible` property:
 

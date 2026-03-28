@@ -186,7 +186,7 @@ variables:
     description: "Private subnet used by Kubernetes native pods. Only required when CNI is OCI VCN-Native."
     default: "10.0.32.0/19"
     pattern: "^([0-9]{1,3}\\.){3}[0-9]{1,3}/19$"
-    required: false
+    required: true
     visible:
       eq:
         - ${cni_type}
