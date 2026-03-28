@@ -130,8 +130,7 @@ For details on schema customization, see the [ORM Schema Documentation](https://
 
 This section configures the compute resources: worker node count, shape, OCPUs, memory, and the node image OCID.
 
-<!-- SCREENSHOT: variables-node-pool.png -->
-<!-- Caption: Node Pool Configuration section — shape, sizing, and image selection. -->
+![Node Pool Configuration section — shape, sizing, and image selection.](./images/variables-node-pool.png)
 
 After filling in all sections, click **Next** to review, then **Create** to save the stack.
 
@@ -141,8 +140,7 @@ After filling in all sections, click **Next** to review, then **Create** to save
 
 After creation, the stack overview shows the selected configuration and the informational text from the `schema.yaml`, which identifies the implemented reference architecture.
 
-<!-- SCREENSHOT: stack-overview.png -->
-<!-- Caption: Stack overview page showing the stack description, variables summary, and available Terraform actions. -->
+![Stack overview page showing the stack description, variables summary, and available Terraform actions.](./images/stack-overview.png)
 
 ---
 
@@ -156,13 +154,12 @@ The Plan action previews all resources that will be created without making any c
 
 The number of resources varies by scenario:
 
-| Scenario | Expected resources |
-|----------|-------------------|
-| Flannel (Examples 1, 2) | ~12 resources (no pods subnet, no pods security list, no service-only route table) |
-| VCN-Native (Examples 3, 4) | ~15 resources (includes pods subnet, pods security list, and service-only route table) |
+| Scenario | Expected resources                                                                     |
+|----------|----------------------------------------------------------------------------------------|
+| Flannel (Examples 1, 2) | ~14 resources (no pods subnet, no pods security list, no service-only route table)     |
+| VCN-Native (Examples 3, 4) | ~17 resources (includes pods subnet, pods security list, and service-only route table) |
 
-<!-- SCREENSHOT: plan-execution.png -->
-<!-- Caption: Terraform Plan output — showing the number of resources to be created. The count varies depending on the selected CNI plugin. -->
+![Terraform Plan output — showing the number of resources to be created. The count varies depending on the selected CNI plugin.](./images/plan-execution.png.png)
 
 ---
 
