@@ -16,17 +16,17 @@ variable "display_name" {
 # Ingress rules
 variable "ingress_security_rules" {
   type = list(object({
-    protocol     = string
-    source       = string
-    source_type  = string
-    description  = optional(string)
-    stateless    = optional(bool)
-    tcp_min      = optional(number)
-    tcp_max      = optional(number)
-    udp_min      = optional(number)
-    udp_max      = optional(number)
-    icmp_type    = optional(number)
-    icmp_code    = optional(number)
+    protocol    = string
+    source      = string
+    source_type = string
+    description = optional(string)
+    stateless   = optional(bool)
+    tcp_min     = optional(number)
+    tcp_max     = optional(number)
+    udp_min     = optional(number)
+    udp_max     = optional(number)
+    icmp_type   = optional(number)
+    icmp_code   = optional(number)
   }))
   default     = []
   description = "List of ingress security rules."

@@ -185,8 +185,8 @@ module "sl-subnet-nodes" {
         source_type = "CIDR_BLOCK"
         description = "Allow Kubernetes API endpoint to communicate with worker nodes"
         # Flannel: TCP/ALL, VCN-Native: TCP/10250
-        tcp_min     = local.is_flannel ? 1 : 10250
-        tcp_max     = local.is_flannel ? 65535 : 10250
+        tcp_min = local.is_flannel ? 1 : 10250
+        tcp_max = local.is_flannel ? 65535 : 10250
       },
       {
         protocol    = "1" # ICMP

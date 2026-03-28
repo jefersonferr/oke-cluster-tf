@@ -10,19 +10,19 @@ variable "display_name" {
 
 variable "ingress_security_rules" {
   type = list(object({
-    protocol     = string
-    source       = string
-    source_type  = string
-    stateless    = optional(bool)
-    description  = optional(string)
-    tcp_min      = optional(number)
-    tcp_max      = optional(number)
-    udp_min      = optional(number)
-    udp_max      = optional(number)
-    icmp_type    = optional(number)
-    icmp_code    = optional(number)
+    protocol    = string
+    source      = string
+    source_type = string
+    stateless   = optional(bool)
+    description = optional(string)
+    tcp_min     = optional(number)
+    tcp_max     = optional(number)
+    udp_min     = optional(number)
+    udp_max     = optional(number)
+    icmp_type   = optional(number)
+    icmp_code   = optional(number)
   }))
-  default     = []
+  default = []
 }
 
 variable "egress_security_rules" {
@@ -39,7 +39,7 @@ variable "egress_security_rules" {
     icmp_type        = optional(number)
     icmp_code        = optional(number)
   }))
-  default     = []
+  default = []
 }
 
 variable "defined_tags" {
