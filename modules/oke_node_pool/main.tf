@@ -30,7 +30,7 @@ resource "oci_containerengine_node_pool" "this" {
     size = var.size
 
     node_pool_pod_network_option_details {
-      cni_type       = var.cni_type
+      cni_type       = var.cni_type == "FLANNEL" ? "FLANNEL_OVERLAY" : var.cni_type
       pod_subnet_ids = var.cni_type == "OCI_VCN_IP_NATIVE" ? var.pod_subnet_ids : []
     }
   }

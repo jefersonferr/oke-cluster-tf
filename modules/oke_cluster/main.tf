@@ -14,7 +14,7 @@ resource "oci_containerengine_cluster" "this" {
   }
 
   cluster_pod_network_options {
-      cni_type = var.cni_type
+    cni_type = var.cni_type == "FLANNEL" ? "FLANNEL_OVERLAY" : var.cni_type
   }
 
   endpoint_config {
