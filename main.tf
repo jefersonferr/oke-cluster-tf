@@ -54,7 +54,7 @@ module "ng-vcn" {
 # Used by: LB subnet (always), API endpoint subnet (when public)
 module "rt-public-subnet" {
   source                 = "./modules/default_route_table"
-  default_route_table_id = module.vcn.vnc_default_route_table_id
+  default_route_table_id = module.vcn.vcn_default_route_table_id
   display_name           = "rt-public-subnet"
 
   route_rules = [
@@ -119,7 +119,7 @@ module "rt-service-only" {
 
 module "sl-subnet-lb" {
   source                   = "./modules/default_security_list"
-  default_security_list_id = module.vcn.vnc_default_security_list_id
+  default_security_list_id = module.vcn.vcn_default_security_list_id
   compartment_id           = var.compartment_id
   display_name             = "sl-subnet-lb"
 

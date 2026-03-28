@@ -1,8 +1,3 @@
-data "oci_identity_availability_domain" "ad" {
-  compartment_id = var.compartment_id
-  ad_number      = var.ad_number
-}
-
 resource "oci_containerengine_node_pool" "this" {
   cluster_id         = var.oke_cluster_id
   compartment_id     = var.compartment_id

@@ -10,9 +10,9 @@ output "vcn_dns_label" {
 output "vcn_display_name" {
     value = oci_core_vcn.vcn.display_name
 }
-output "vnc_default_route_table_id" {
+output "vcn_default_route_table_id" {
     value = oci_core_vcn.vcn.default_route_table_id
 }
-output "vnc_default_security_list_id" {
+output "vcn_default_security_list_id" {
     value = oci_core_vcn.vcn.default_security_list_id
 }
