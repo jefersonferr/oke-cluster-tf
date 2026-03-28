@@ -171,18 +171,15 @@ After reviewing the plan:
 2. Confirm the action.
 3. Wait for the job to complete. Typical provisioning time is 10–15 minutes.
 
-<!-- SCREENSHOT: apply-in-progress.png -->
-<!-- Caption: Apply job in progress — ORM provisions all networking resources, the OKE cluster, and the node pool. -->
+![Apply job in progress — ORM provisions all networking resources, the OKE cluster, and the node pool.](./images/apply-in-progress.png)
 
-<!-- SCREENSHOT: apply-completed.png -->
-<!-- Caption: Apply job completed successfully — all resources created. -->
+![Apply job completed successfully — all resources created.](./images/apply-completed.png)
 
 ### Reviewing Outputs
 
 After the apply completes, the **Outputs** tab shows the values defined in `outputs.tf`, including the `scenario_description` that confirms which Oracle documentation example was provisioned.
 
-<!-- SCREENSHOT: apply-outputs.png -->
-<!-- Caption: Stack outputs — the scenario_description confirms the selected networking scenario (e.g., "Example 3 — OCI VCN-Native CNI, Public Kubernetes API Endpoint"). -->
+![Stack outputs — the scenario_description confirms the selected networking scenario (e.g., "Example 3 — OCI VCN-Native CNI, Public Kubernetes API Endpoint").](./images/apply-outputs.png)
 
 ---
 
@@ -192,11 +189,9 @@ After the apply completes, the **Outputs** tab shows the values defined in `outp
 2. Verify that the cluster status is **ACTIVE**.
 3. Check the node pool and confirm the worker nodes are in **ACTIVE** state.
 
-<!-- SCREENSHOT: oke-cluster-active.png -->
-<!-- Caption: OKE cluster in ACTIVE state in the OCI Console. -->
+![OKE cluster in ACTIVE state in the OCI Console.](./images/oke-cluster-active.png)
 
-<!-- SCREENSHOT: oke-node-pool-active.png -->
-<!-- Caption: Node pool details showing active worker nodes. -->
+![Node pool details showing active worker nodes.](./images/oke-node-pool-active.png)
 
 ### Verifying the Network Topology
 
@@ -206,8 +201,7 @@ Navigate to **Networking → Virtual Cloud Networks** and inspect the VCN create
 - The route tables are correctly assigned (public vs. private, service-only for VCN-Native workers)
 - The security lists contain the expected rules
 
-<!-- SCREENSHOT: vcn-subnets-overview.png -->
-<!-- Caption: VCN subnets created by the stack — showing the subnet visibility (public/private) and associated route tables. -->
+![VCN subnets created by the stack — showing the subnet visibility (public/private) and associated route tables.](./images/vcn-subnets-overview.png)
 
 ---
 
