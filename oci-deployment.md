@@ -93,8 +93,7 @@ This is where the `schema.yaml` enhances the ORM experience. Instead of manually
 
 This section includes region, compartment, availability domain, cluster name, and Kubernetes version. The compartment and availability domain fields use native OCI lookups — you select from a dropdown populated by your tenancy, instead of pasting OCIDs manually.
 
-<!-- SCREENSHOT: variables-general-config.png -->
-<!-- Caption: General Configuration section — region, compartment, AD, cluster name, and Kubernetes version are populated dynamically by the ORM Console. -->
+![General Configuration section — region, compartment, AD, cluster name, and Kubernetes version are populated dynamically by the ORM Console.](./images/variables-general-config.png)
 
 ### 2.2 — Cluster Architecture
 
@@ -106,13 +105,13 @@ This section controls the networking scenario. Three fields determine the cluste
 
 The combination of **CNI Plugin** and **Public Kubernetes API Endpoint** maps directly to one of the four Oracle documentation examples. All downstream resources (subnets, route tables, security lists) are automatically adjusted.
 
-<!-- SCREENSHOT: variables-cluster-architecture.png -->
-<!-- Caption: Cluster Architecture section — selecting the CNI plugin and API endpoint exposure. These two choices determine the networking scenario. -->
+![Cluster Architecture section — selecting the CNI plugin and API endpoint exposure. These two choices determine the networking scenario.](./images/variables-cluster-architecture.png)
 
 ### 2.3 — Network Configuration
 
 This section shows the CIDR blocks for each subnet. The key behavior here is **conditional visibility**: the **Pods Subnet CIDR** field only appears when the CNI plugin is set to `OCI_VCN_IP_NATIVE`. When `FLANNEL` is selected, the field is hidden because Flannel does not require a dedicated pods subnet.
 
+![Network Configuration with OCI VCN-Native CNI selected — the Pods Subnet CIDR field is visible.](./images/variables-network-vcn-native.png)
 <!-- SCREENSHOT: variables-network-vcn-native.png -->
 <!-- Caption: Network Configuration with OCI VCN-Native CNI selected — the Pods Subnet CIDR field is visible. -->
 
