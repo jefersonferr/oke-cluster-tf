@@ -1,7 +1,7 @@
 variable "compartment_id" { type = string }
 variable "vcn_id"         { type = string }
 variable "cluster_name"   { default = "oke-native-cluster" }
-variable "kubernetes_version"    { default = "v1.35.0" }
+variable "kubernetes_version"    { default = "v1.34.2" }
 
 # Subnets
 variable "endpoint_subnet_id" { type = string } # API Server

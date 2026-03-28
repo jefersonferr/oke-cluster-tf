@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="823909a6-7b71-434b-b090-f3bdf01afdbc" name="Changes" comment="Upgrade kubernetes cluster version to v1.35.0.">
+    <list default="true" id="823909a6-7b71-434b-b090-f3bdf01afdbc" name="Changes" comment="fix: map FLANNEL to FLANNEL_OVERLAY for OCI API compatibility&#10;&#10;The OCI API expects 'FLANNEL_OVERLAY' in cluster_pod_network_options&#10;and node_pool_pod_network_option_details, but the user-facing variable&#10;uses 'FLANNEL' for simplicity. Added internal mapping in both&#10;oke_cluster and oke_node_pool modules to translate the value before&#10;sending to the API.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/oke_cluster/variables.tf" beforeDir="false" afterPath="$PROJECT_DIR$/modules/oke_cluster/variables.tf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/schema.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/schema.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -362,7 +363,23 @@
       <option name="project" value="LOCAL" />
       <updated>1774711579282</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="Upgrade kubernetes cluster version to v1.35.0, update file schema.yaml.">
+      <option name="closed" value="true" />
+      <created>1774712305010</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1774712305010</updated>
+    </task>
+    <task id="LOCAL-00035" summary="fix: map FLANNEL to FLANNEL_OVERLAY for OCI API compatibility&#10;&#10;The OCI API expects 'FLANNEL_OVERLAY' in cluster_pod_network_options&#10;and node_pool_pod_network_option_details, but the user-facing variable&#10;uses 'FLANNEL' for simplicity. Added internal mapping in both&#10;oke_cluster and oke_node_pool modules to translate the value before&#10;sending to the API.">
+      <option name="closed" value="true" />
+      <created>1774713547969</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1774713547969</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -397,6 +414,8 @@
     <MESSAGE value="Update schema.yaml, stackDescription." />
     <MESSAGE value="Update oci-deployment.md" />
     <MESSAGE value="Upgrade kubernetes cluster version to v1.35.0." />
-    <option name="LAST_COMMIT_MESSAGE" value="Upgrade kubernetes cluster version to v1.35.0." />
+    <MESSAGE value="Upgrade kubernetes cluster version to v1.35.0, update file schema.yaml." />
+    <MESSAGE value="fix: map FLANNEL to FLANNEL_OVERLAY for OCI API compatibility&#10;&#10;The OCI API expects 'FLANNEL_OVERLAY' in cluster_pod_network_options&#10;and node_pool_pod_network_option_details, but the user-facing variable&#10;uses 'FLANNEL' for simplicity. Added internal mapping in both&#10;oke_cluster and oke_node_pool modules to translate the value before&#10;sending to the API." />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: map FLANNEL to FLANNEL_OVERLAY for OCI API compatibility&#10;&#10;The OCI API expects 'FLANNEL_OVERLAY' in cluster_pod_network_options&#10;and node_pool_pod_network_option_details, but the user-facing variable&#10;uses 'FLANNEL' for simplicity. Added internal mapping in both&#10;oke_cluster and oke_node_pool modules to translate the value before&#10;sending to the API." />
   </component>
 </project>
