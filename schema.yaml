@@ -3,15 +3,12 @@ title: "OCI OKE Infrastructure as Code"
 # Sub Title shown in Application Information tab.
 description: "OCI OKE Infrastructure as Code – Reference Implementation"
 stackDescription: |
-  Terraform-based reference implementation to provision a complete Kubernetes
-  environment on Oracle Cloud Infrastructure (OCI) using Oracle Kubernetes Engine (OKE).
-
-  Supports all four networking scenarios from the official Oracle documentation:
-
-    Example 1 — Flannel CNI, Public API Endpoint
-    Example 2 — Flannel CNI, Private API Endpoint
-    Example 3 — OCI VCN-Native CNI, Public API Endpoint
-    Example 4 — OCI VCN-Native CNI, Private API Endpoint
+  Terraform-based reference implementation to provision a complete Kubernetes environment on Oracle Cloud Infrastructure (OCI) using Oracle Kubernetes Engine (OKE).
+  Supports all networking scenarios from the official Oracle documentation:
+  1) Flannel CNI, Public API Endpoint
+  2) Flannel CNI, Private API Endpoint
+  3) OCI VCN-Native CNI, Public API Endpoint
+  4) OCI VCN-Native CNI, Private API Endpoint
 
 informationalText: |
   This stack implements the official networking guidance from Oracle Documentation:
