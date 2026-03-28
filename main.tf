@@ -559,7 +559,7 @@ module "subnet-api-endpoint" {
   compartment_id    = var.compartment_id
   display_name      = "subnet-api-endpoint"
   dns_label         = "subnetapi"
-  private_subnet    = local.is_api_private ? "true" : "false"
+  private_subnet    = local.is_api_private
   route_table_id    = local.is_api_public ? module.rt-public-subnet.default_route_table_id : module.rt-private-subnet.route_table_id
   security_list_ids = [module.sl-subnet-api-endpoint.security_list_id]
   vcn_id            = module.vcn.vcn_id
@@ -574,7 +574,7 @@ module "subnet-nodes" {
   compartment_id    = var.compartment_id
   display_name      = "subnet-nodes"
   dns_label         = "subnetnodes"
-  private_subnet    = "true"
+  private_subnet    = true
   route_table_id    = local.is_flannel ? module.rt-private-subnet.route_table_id : module.rt-service-only[0].route_table_id
   security_list_ids = [module.sl-subnet-nodes.security_list_id]
   vcn_id            = module.vcn.vcn_id
@@ -588,7 +588,7 @@ module "subnet-pods" {
   compartment_id    = var.compartment_id
   display_name      = "subnet-pods"
   dns_label         = "subnetpods"
-  private_subnet    = "true"
+  private_subnet    = true
   route_table_id    = module.rt-private-subnet.route_table_id
   security_list_ids = [module.sl-subnet-pods[0].security_list_id]
   vcn_id            = module.vcn.vcn_id

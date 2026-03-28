@@ -5,7 +5,7 @@ resource "oci_containerengine_node_pool" "this" {
   name               = var.node_pool_name
   node_shape         = var.node_shape
 
-  # Configuração de CPU e Memória
+  # CPU and Memory configuration
   node_shape_config {
     ocpus         = var.ocpus
     memory_in_gbs = var.memory_in_gbs

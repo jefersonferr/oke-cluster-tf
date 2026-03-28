@@ -9,7 +9,7 @@ resource "oci_containerengine_cluster" "this" {
     service_lb_subnet_ids = var.service_lb_subnet_ids
 
     kubernetes_network_config {
-      services_cidr = "10.96.0.0/16"
+      services_cidr = var.services_cidr
     }
   }
 
