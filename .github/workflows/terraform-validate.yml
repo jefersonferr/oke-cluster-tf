@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [master]
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   validate:
     name: Format & Validate
@@ -28,10 +31,3 @@ jobs:
 
       - name: Validate configuration
         run: terraform validate
-
-      - name: Generate module docs
-        uses: terraform-docs/gh-actions@v1
-        with:
-          find-dir: modules/
-          output-file: README.md
-          git-push: false
