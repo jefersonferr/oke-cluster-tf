@@ -48,7 +48,7 @@ This is the simplest approach — no GitHub integration required.
 5. Choose **ZIP File** and upload the file downloaded in step 1.
 6. Click **Next**.
 
-![Stack creation screen — uploading the repository ZIP file as the Terraform source.](images/stack-creation-zip-upload.png )
+![Stack creation screen — uploading the repository ZIP file as the Terraform source.](./images/stack-creation-zip-upload.png)
 <!-- Caption: Stack creation screen — uploading the repository ZIP file as the Terraform source. -->
 
 ### Option B — From a GitHub Source Provider
