@@ -49,7 +49,6 @@ This is the simplest approach — no GitHub integration required.
 6. Click **Next**.
 
 ![Stack creation screen — uploading the repository ZIP file as the Terraform source.](./images/stack-creation-zip-upload.png)
-<!-- Caption: Stack creation screen — uploading the repository ZIP file as the Terraform source. -->
 
 ### Option B — From a GitHub Source Provider
 
@@ -64,8 +63,7 @@ If you have already configured a GitHub Source Provider, skip to the next sub-st
 3. Select **GitHub** as the type.
 4. Authenticate with your GitHub account and grant access to the repository.
 
-<!-- SCREENSHOT: source-provider-creation.png -->
-<!-- Caption: Creating a GitHub Source Provider in the OCI Console. -->
+![Creating a GitHub Source Provider in the OCI Console.](./images/source-provider-creation.png)
 
 **2. Create the Stack from the Source Provider**
 
@@ -79,8 +77,7 @@ If you have already configured a GitHub Source Provider, skip to the next sub-st
     - **Working Directory:** `/`
 5. Click **Next**.
 
-<!-- SCREENSHOT: stack-creation-source.png -->
-<!-- Caption: Stack creation screen — selecting the GitHub repository as the Terraform source. -->
+![Stack creation screen — selecting the GitHub repository as the Terraform source.](./images/stack-creation-source.png)
 
 ---
 
