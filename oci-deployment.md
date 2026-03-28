@@ -159,7 +159,7 @@ The number of resources varies by scenario:
 | Flannel (Examples 1, 2) | ~14 resources (no pods subnet, no pods security list, no service-only route table)     |
 | VCN-Native (Examples 3, 4) | ~17 resources (includes pods subnet, pods security list, and service-only route table) |
 
-![Terraform Plan output — showing the number of resources to be created. The count varies depending on the selected CNI plugin.](./images/plan-execution.png.png)
+![Terraform Plan output — showing the number of resources to be created. The count varies depending on the selected CNI plugin.](./images/plan-execution.png)
 
 ---
 
