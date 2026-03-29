@@ -222,13 +222,12 @@ oci ce cluster create-kubeconfig \
 Verify connectivity:
 
 ```bash
-kubectl get nodes
+kubectl get version
 ```
 
 Expected output: worker nodes in `Ready` status.
 
-<!-- SCREENSHOT: cloud-shell-kubectl.png -->
-<!-- Caption: Cloud Shell session showing successful kubectl connection and worker nodes in Ready status. -->
+![Cloud Shell session showing successful kubectl connection and kubernetes version.](./images/cloud-shell-kubectl.png)
 
 > **Note:** If the API endpoint is private (Examples 2 and 4), Cloud Shell access requires that the Cloud Shell network can reach the private endpoint. You may need to use OCI Bastion, VPN, or FastConnect instead.
 
@@ -264,8 +263,7 @@ When the environment is no longer needed:
 
 All resources created by the stack will be removed.
 
-<!-- SCREENSHOT: destroy-completed.png -->
-<!-- Caption: Destroy job completed — all resources removed. -->
+![Destroy job completed — all resources removed.](./images/destroy-completed.png)
 
 ---
 
