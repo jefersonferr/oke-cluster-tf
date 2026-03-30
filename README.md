@@ -163,7 +163,7 @@ This repository includes a `schema.yaml` that provides a guided form experience 
 Key dynamic features in the ORM form:
 - **Region**: dropdown listing all subscribed regions in the tenancy (type `oci:identity:region:name`)
 - **Kubernetes Version**: dropdown populated with versions available in the selected region (type `oci:kubernetes:versions:id`)
-- **Node Image**: dropdown filtered by compartment, node shape, and OS (type `oci:core:image:id`) — optional, auto-resolved if left empty
+- **Node Image**: optional text field for the OKE worker node image OCID (Oracle Linux 8) — if left empty, the latest compatible image is auto-resolved via data source
 
 1. In the OCI Console, navigate to **Developer Services → Resource Manager → Stacks**.
 2. Create a new stack from a ZIP file or GitHub repository URL.
@@ -234,4 +234,3 @@ This project is licensed under the Apache License 2.0. See [LICENSE](LICENSE) fo
 - [OKE Network Resource Configuration Examples](https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengnetworkconfigexample.htm)
 - [ORM Schema Configuration](https://docs.oracle.com/en-us/iaas/Content/ResourceManager/Concepts/terraformconfigresourcemanager_topic-schema.htm)
 - [OKE Worker Node Images](https://docs.oracle.com/en-us/iaas/images/oke-worker-node-oracle-linux-8x/index.htm)
-- [Data Source: oci_containerengine_node_pool_option](https://docs.oracle.com/en-us/iaas/tools/terraform-provider-oci/latest/docs/d/containerengine_node_pool_option.html)

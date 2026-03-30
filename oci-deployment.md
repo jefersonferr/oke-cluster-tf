@@ -133,7 +133,11 @@ For details on schema customization, see the [ORM Schema Documentation](https://
 
 This section configures the compute resources: worker node count, shape, OCPUs, memory, and the node image.
 
-The **Node Image** field is now a dynamic dropdown (type `oci:core:image:id`) filtered by compartment, node shape, and operating system. It shows only images compatible with the selected shape. This field is **optional** — if left empty, the `oci_containerengine_node_pool_option` data source in `data.tf` automatically resolves the latest OKE Oracle Linux 8 image matching the selected Kubernetes version and region.
+The **Node Image OCID** field is a plain text field where you can paste the OCID of an OKE worker node image (Oracle Linux 8). This field is **optional** — if left empty, the `data.tf` data source queries the `oci_containerengine_node_pool_option` API and automatically resolves the latest OKE Oracle Linux 8 image compatible with the selected Kubernetes version and region.
+
+To find image OCIDs manually, consult the [OKE Worker Node Images](https://docs.oracle.com/en-us/iaas/images/oke-worker-node-oracle-linux-8x/index.htm) documentation.
+
+> **Note:** OKE worker node images are not listed by the ORM `oci:core:image:id` dropdown type — they are specific to the Container Engine service. That is why this field uses a plain string input instead of a dynamic dropdown.
 
 ![Node Pool Configuration section — shape, sizing, and image selection.](./images/variables-node-pool.png)
 
@@ -227,12 +231,12 @@ oci ce cluster create-kubeconfig \
 Verify connectivity:
 
 ```bash
-kubectl get version
+kubectl get nodes
 ```
 
 Expected output: worker nodes in `Ready` status.
 
-![Cloud Shell session showing successful kubectl connection and kubernetes version.](./images/cloud-shell-kubectl.png)
+![Cloud Shell session showing successful kubectl connection and nodes status](./images/cloud-shell-kubectl.png)
 
 > **Note:** If the API endpoint is private (Examples 2 and 4), Cloud Shell access requires that the Cloud Shell network can reach the private endpoint. You may need to use OCI Bastion, VPN, or FastConnect instead.
 
@@ -276,15 +280,15 @@ All resources created by the stack will be removed.
 
 The `schema.yaml` file is what transforms the ORM deployment from a raw variable form into a guided, context-aware experience. Key features used in this stack:
 
+**Dynamic region selection** — the `region` field uses type `oci:identity:region:name` to list all subscribed regions in the tenancy.
+
 **Variable grouping** — variables are organized into logical sections (General, Cluster Architecture, Network, Node Pool) instead of being presented as a flat list.
 
 **OCI-native types** — fields like `compartment_id` and `ad_name` use OCI-specific types (`oci:identity:compartment:id`, `oci:identity:availabilitydomain:name`) that render as dynamic dropdowns populated from the tenancy.
 
-**Dynamic Kubernetes version selection** — the `kubernetes_version` field uses type `oci:kubernetes:versions:id` with `dependsOn` on `compartmentId` and `clusterOptionId`, which queries the OKE API and lists only versions available in the selected region.
+**Dynamic Kubernetes version selection** — the `kubernetes_version` field uses type `oci:kubernetes:versions:id` with `dependsOn` on `compartmentId` and `clusterOptionId`, which queries the OKE API and lists only stable versions available in the selected region.
 
-**Dynamic image selection** — the `pool_node_image_id` field uses type `oci:core:image:id` with `dependsOn` on `compartmentId`, `shape`, and `operatingSystem`, filtering the dropdown to show only compatible images. This field is optional — when left empty, the `data.tf` data source resolves the correct image automatically.
-
-**Dynamic region selection** — the `region` field uses type `oci:identity:region:name` to list all subscribed regions in the tenancy, replacing the previous hard-coded enum.
+**Automatic node image resolution** — the `pool_node_image_id` field is a plain string (optional). When left empty, the `data.tf` data source queries `oci_containerengine_node_pool_option` and automatically selects the latest OKE Oracle Linux 8 image matching the selected Kubernetes version. OKE worker node images are not available through the ORM `oci:core:image:id` type, which is why this field uses a text input with a data source fallback instead of a dynamic dropdown.
 
 **Conditional visibility** — the Pods Subnet CIDR field is hidden when Flannel is selected, reducing visual noise and preventing configuration errors.
 
