@@ -213,7 +213,7 @@ variables:
     type: number
     title: "Worker Node Count"
     description: "Number of worker nodes in the node pool"
-    default: 2
+    default: 3
     minimum: 1
 
   pool_node_shape:
@@ -224,6 +224,7 @@ variables:
     enum:
       - VM.Standard.E6.Flex
       - VM.Standard.E5.Flex
+      - VM.Standard.E4.Flex
 
   ocpus:
     type: number
@@ -231,6 +232,7 @@ variables:
     description: "OCPUs per node (only used for Flex shapes)"
     default: 2
     minimum: 1
+    required: true
 
   memory_in_gbs:
     type: number
@@ -238,10 +240,11 @@ variables:
     description: "Memory per node in GB"
     default: 16
     minimum: 8
+    required: true
 
   pool_node_image_id:
     type: string
-    title: "Node Image OCID (optional)"
+    title: "Node Image OCID"
     description: |
       OCID of the OKE worker node image (Oracle Linux 8).
       Leave empty to automatically select the latest image compatible with
