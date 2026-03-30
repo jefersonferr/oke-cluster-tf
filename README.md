@@ -114,6 +114,7 @@ All four scenarios share a common foundation: a VCN with Internet Gateway, NAT G
 - Worker nodes deployed in private subnet
 - Pod subnet attached when using VCN-Native CNI
 - Configurable node count
+- **Dynamic image resolution**: the worker node image is automatically resolved based on the selected Kubernetes version and region via the `oci_containerengine_node_pool_option` data source. A specific image OCID can still be provided to override the automatic selection
 
 ---
 
@@ -121,10 +122,11 @@ All four scenarios share a common foundation: a VCN with Internet Gateway, NAT G
 ```
 .
 ├── main.tf              # Root module — orchestrates all resources with conditional logic
+├── data.tf              # Data sources for dynamic image resolution (node pool images)
 ├── variables.tf         # Input variables
-├── outputs.tf           # Outputs including selected scenario description
+├── outputs.tf           # Outputs including selected scenario and resolved image info
 ├── provider.tf          # OCI provider configuration
-├── schema.yaml          # ORM Console form definition with conditional visibility
+├── schema.yaml          # ORM Console form definition with dynamic dropdowns and conditional visibility
 ├── CONTRIBUTING.md      # Contribution guidelines
 ├── LICENSE              # Apache License 2.0
 ├── examples/            # tfvars examples for all 4 scenarios
@@ -158,6 +160,11 @@ Each module contains its own `README.md` with auto-generated documentation of in
 
 This repository includes a `schema.yaml` that provides a guided form experience in the ORM Console. The form dynamically adjusts based on your selections — for example, the Pods Subnet CIDR field is only shown when the CNI is set to OCI VCN-Native.
 
+Key dynamic features in the ORM form:
+- **Region**: dropdown listing all subscribed regions in the tenancy (type `oci:identity:region:name`)
+- **Kubernetes Version**: dropdown populated with versions available in the selected region (type `oci:kubernetes:versions:id`)
+- **Node Image**: dropdown filtered by compartment, node shape, and OS (type `oci:core:image:id`) — optional, auto-resolved if left empty
+
 1. In the OCI Console, navigate to **Developer Services → Resource Manager → Stacks**.
 2. Create a new stack from a ZIP file or GitHub repository URL.
 3. Fill in the form fields — the scenario is determined by the **CNI Plugin** and **Public Kubernetes API Endpoint** selections.
@@ -170,6 +177,8 @@ For detailed deployment instructions, see [oci-deployment.md](oci-deployment.md)
 ```bash
 cp examples/example3-vcn-native-public.tfvars.example terraform.tfvars
 # Edit terraform.tfvars with your values
+# Note: pool_node_image_id is optional — leave it commented to auto-resolve
+#       the latest OKE Oracle Linux 8 image for your Kubernetes version and region.
 
 terraform init
 terraform plan
@@ -193,6 +202,9 @@ After a successful apply, the stack outputs the following:
 | `subnet_nodes_id` | OCID of the worker nodes subnet |
 | `subnet_lb_id` | OCID of the load balancer subnet |
 | `subnet_pods_id` | OCID of the pods subnet (null when using Flannel) |
+| `node_image_id` | The effective image OCID used for worker nodes (user-provided or auto-resolved) |
+| `node_image_source` | Indicates whether the image was `user-provided` or `auto-resolved` |
+| `available_oke_images` | List of all OKE Oracle Linux 8 images available for the selected Kubernetes version |
 
 ---
 
@@ -222,3 +234,4 @@ This project is licensed under the Apache License 2.0. See [LICENSE](LICENSE) fo
 - [OKE Network Resource Configuration Examples](https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengnetworkconfigexample.htm)
 - [ORM Schema Configuration](https://docs.oracle.com/en-us/iaas/Content/ResourceManager/Concepts/terraformconfigresourcemanager_topic-schema.htm)
 - [OKE Worker Node Images](https://docs.oracle.com/en-us/iaas/images/oke-worker-node-oracle-linux-8x/index.htm)
+- [Data Source: oci_containerengine_node_pool_option](https://docs.oracle.com/en-us/iaas/tools/terraform-provider-oci/latest/docs/d/containerengine_node_pool_option.html)

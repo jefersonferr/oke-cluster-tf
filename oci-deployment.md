@@ -16,7 +16,7 @@ This guide walks through the end-to-end process of deploying an OKE cluster usin
 ### Required information before starting
 
 - **Compartment OCID** — the target compartment for all resources
-- **Worker Node Image OCID** — the OKE-compatible image for your region and Kubernetes version. Consult the [OKE Worker Node Images](https://docs.oracle.com/en-us/iaas/images/oke-worker-node-oracle-linux-8x/index.htm) documentation
+- **Worker Node Image OCID** _(optional)_ — if left empty, the latest OKE Oracle Linux 8 image compatible with the selected Kubernetes version and region is automatically resolved. To use a specific image, consult the [OKE Worker Node Images](https://docs.oracle.com/en-us/iaas/images/oke-worker-node-oracle-linux-8x/index.htm) documentation
 - **Networking scenario** — decide which combination of CNI plugin and API endpoint exposure you need:
 
 | Scenario | `cni_type` | `is_api_endpoint_public` |
@@ -91,7 +91,10 @@ This is where the `schema.yaml` enhances the ORM experience. Instead of manually
 
 ### 2.1 — General Configuration
 
-This section includes region, compartment, availability domain, cluster name, and Kubernetes version. The compartment and availability domain fields use native OCI lookups — you select from a dropdown populated by your tenancy, instead of pasting OCIDs manually.
+This section includes region, compartment, availability domain, cluster name, and Kubernetes version. These fields use OCI-native dynamic lookups:
+- **Region** — dropdown populated with all subscribed regions in the tenancy (`oci:identity:region:name`)
+- **Compartment** and **Availability Domain** — dropdowns populated from the tenancy
+- **Kubernetes Version** — dropdown showing only versions available in the selected region (`oci:kubernetes:versions:id`), replacing the previous free-text field
 
 ![General Configuration section — region, compartment, AD, cluster name, and Kubernetes version are populated dynamically by the ORM Console.](./images/variables-general-config.png)
 
@@ -128,7 +131,9 @@ For details on schema customization, see the [ORM Schema Documentation](https://
 
 ### 2.4 — Node Pool Configuration
 
-This section configures the compute resources: worker node count, shape, OCPUs, memory, and the node image OCID.
+This section configures the compute resources: worker node count, shape, OCPUs, memory, and the node image.
+
+The **Node Image** field is now a dynamic dropdown (type `oci:core:image:id`) filtered by compartment, node shape, and operating system. It shows only images compatible with the selected shape. This field is **optional** — if left empty, the `oci_containerengine_node_pool_option` data source in `data.tf` automatically resolves the latest OKE Oracle Linux 8 image matching the selected Kubernetes version and region.
 
 ![Node Pool Configuration section — shape, sizing, and image selection.](./images/variables-node-pool.png)
 
@@ -274,6 +279,12 @@ The `schema.yaml` file is what transforms the ORM deployment from a raw variable
 **Variable grouping** — variables are organized into logical sections (General, Cluster Architecture, Network, Node Pool) instead of being presented as a flat list.
 
 **OCI-native types** — fields like `compartment_id` and `ad_name` use OCI-specific types (`oci:identity:compartment:id`, `oci:identity:availabilitydomain:name`) that render as dynamic dropdowns populated from the tenancy.
+
+**Dynamic Kubernetes version selection** — the `kubernetes_version` field uses type `oci:kubernetes:versions:id` with `dependsOn` on `compartmentId` and `clusterOptionId`, which queries the OKE API and lists only versions available in the selected region.
+
+**Dynamic image selection** — the `pool_node_image_id` field uses type `oci:core:image:id` with `dependsOn` on `compartmentId`, `shape`, and `operatingSystem`, filtering the dropdown to show only compatible images. This field is optional — when left empty, the `data.tf` data source resolves the correct image automatically.
+
+**Dynamic region selection** — the `region` field uses type `oci:identity:region:name` to list all subscribed regions in the tenancy, replacing the previous hard-coded enum.
 
 **Conditional visibility** — the Pods Subnet CIDR field is hidden when Flannel is selected, reducing visual noise and preventing configuration errors.
 
