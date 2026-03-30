@@ -215,6 +215,7 @@ variables:
     description: "Number of worker nodes in the node pool"
     default: 3
     minimum: 1
+    required: true
 
   pool_node_shape:
     type: enum
@@ -225,6 +226,7 @@ variables:
       - VM.Standard.E6.Flex
       - VM.Standard.E5.Flex
       - VM.Standard.E4.Flex
+    required: true
 
   ocpus:
     type: number
