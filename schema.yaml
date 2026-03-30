@@ -17,7 +17,7 @@ informationalText: |
   Select the CNI Plugin and API Endpoint exposure to match your desired scenario.
 
 schemaVersion: 1.1.0
-version: "2026.03.28"
+version: "2026.03.30"
 locale: "en"
 
 # =============================================================================
@@ -57,6 +57,12 @@ variableGroups:
       - memory_in_gbs
       - pool_node_image_id
 
+  # Hidden variables used internally by dependsOn references
+  - title: "Hidden"
+    variables:
+      - cluster_option_id
+    visible: false
+
 # =============================================================================
 # Variable Definitions
 # =============================================================================
@@ -68,14 +74,10 @@ variables:
   # ---------------------------------------------------------------------------
 
   region:
-    type: enum
+    type: oci:identity:region:name
     title: "OCI Region"
     description: "Region where resources will be deployed"
     required: true
-    default: "sa-saopaulo-1"
-    enum:
-      - sa-saopaulo-1
-      - sa-vinhedo-1
 
   compartment_id:
     type: oci:identity:compartment:id
@@ -89,7 +91,6 @@ variables:
     description: "Availability Domain where the worker nodes will be deployed"
     dependsOn:
       compartmentId: compartment_id
-      region: region
     required: true
 
   cluster_name:
@@ -98,14 +99,26 @@ variables:
     description: "Display name of the Kubernetes cluster"
     required: true
 
+  # -------------------------------------------------------------------------
+  # Kubernetes Version — dynamic dropdown populated from OKE API
+  # Uses oci:kubernetes:versions:id to list only versions available in the
+  # selected region/compartment. Replaces the previous static string field.
+  # -------------------------------------------------------------------------
   kubernetes_version:
-    type: string
+    type: oci:kubernetes:versions:id
     title: "Kubernetes Version"
-    description: "The Kubernetes version used for the OKE control plane and worker nodes"
+    description: "Select the Kubernetes version for the OKE control plane and worker nodes. Only versions available in your region are listed."
+    required: true
     dependsOn:
       compartmentId: compartment_id
-      region: region
-    default: "v1.34.2"
+      clusterOptionId: cluster_option_id
+
+  # Hidden helper variable required by oci:kubernetes:versions:id dependsOn
+  cluster_option_id:
+    type: string
+    title: "Cluster Option ID"
+    default: "all"
+    visible: false
 
   # ---------------------------------------------------------------------------
   # Cluster Architecture
@@ -226,8 +239,25 @@ variables:
     default: 16
     minimum: 8
 
+  # -------------------------------------------------------------------------
+  # Node Image — dynamic dropdown populated from OCI Compute Images API
+  # Uses oci:core:image:id to list images filtered by compartment and shape.
+  # The dependsOn.compartmentId + dependsOn.shape filters ensure only
+  # compatible images for the selected shape are shown.
+  #
+  # IMPORTANT: Leave empty to auto-resolve the latest OKE Oracle Linux 8
+  # image for the selected Kubernetes version via data source.
+  # -------------------------------------------------------------------------
   pool_node_image_id:
-    type: string
-    title: "Node Image OCID"
-    description: "OCID of the image used by OKE worker nodes (Oracle Linux 8.x). Documentation: https://docs.oracle.com/en-us/iaas/images/oke-worker-node-oracle-linux-8x/index.htm"
-    required: true
+    type: oci:core:image:id
+    title: "Node Image"
+    description: |
+      Select an OKE worker node image. The dropdown shows images compatible with the
+      selected node shape and compartment. Choose an "OKE Worker Node" image matching
+      your Kubernetes version. Leave empty to auto-select the latest Oracle Linux 8
+      OKE image for the chosen Kubernetes version.
+    required: false
+    dependsOn:
+      compartmentId: compartment_id
+      shape: pool_node_shape
+      operatingSystem: "Oracle Linux"
