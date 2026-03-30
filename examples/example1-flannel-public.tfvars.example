@@ -18,6 +18,12 @@ subnet_nodes_cidr_24     = "10.0.2.0/24"
 kubernetes_version = "v1.34.2"
 pool_size          = 2
 pool_node_shape    = "VM.Standard.E6.Flex"
-pool_node_image_id = "ocid1.image.oc1.sa-saopaulo-1.example"
 ocpus              = 2
 memory_in_gbs      = 16
+
+# pool_node_image_id is now OPTIONAL:
+# - Leave commented to auto-resolve the latest OKE Oracle Linux 8 image
+#   compatible with the selected kubernetes_version and region.
+# - Uncomment and set a value to use a specific image OCID.
+#
+# pool_node_image_id = "ocid1.image.oc1.sa-saopaulo-1.example"
