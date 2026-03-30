@@ -101,13 +101,13 @@ variables:
 
   # -------------------------------------------------------------------------
   # Kubernetes Version — dynamic dropdown populated from OKE API
-  # Uses oci:kubernetes:versions:id to list only versions available in the
-  # selected region/compartment. Replaces the previous static string field.
+  # Uses oci:kubernetes:versions:id to list only stable versions available
+  # in the selected region/compartment.
   # -------------------------------------------------------------------------
   kubernetes_version:
     type: oci:kubernetes:versions:id
     title: "Kubernetes Version"
-    description: "Select the Kubernetes version for the OKE control plane and worker nodes. Only versions available in your region are listed."
+    description: "Select the Kubernetes version for the OKE control plane and worker nodes. Only stable versions available in your region are listed."
     required: true
     dependsOn:
       compartmentId: compartment_id
@@ -239,25 +239,13 @@ variables:
     default: 16
     minimum: 8
 
-  # -------------------------------------------------------------------------
-  # Node Image — dynamic dropdown populated from OCI Compute Images API
-  # Uses oci:core:image:id to list images filtered by compartment and shape.
-  # The dependsOn.compartmentId + dependsOn.shape filters ensure only
-  # compatible images for the selected shape are shown.
-  #
-  # IMPORTANT: Leave empty to auto-resolve the latest OKE Oracle Linux 8
-  # image for the selected Kubernetes version via data source.
-  # -------------------------------------------------------------------------
   pool_node_image_id:
-    type: oci:core:image:id
-    title: "Node Image"
+    type: string
+    title: "Node Image OCID (optional)"
     description: |
-      Select an OKE worker node image. The dropdown shows images compatible with the
-      selected node shape and compartment. Choose an "OKE Worker Node" image matching
-      your Kubernetes version. Leave empty to auto-select the latest Oracle Linux 8
-      OKE image for the chosen Kubernetes version.
+      OCID of the OKE worker node image (Oracle Linux 8).
+      Leave empty to automatically select the latest image compatible with
+      the chosen Kubernetes version and region.
+      To find image OCIDs manually:
+      https://docs.oracle.com/en-us/iaas/images/oke-worker-node-oracle-linux-8x/
     required: false
-    dependsOn:
-      compartmentId: compartment_id
-      shape: pool_node_shape
-      operatingSystem: "Oracle Linux"
