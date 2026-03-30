@@ -5,11 +5,11 @@
 output "scenario_description" {
   description = "The Oracle documentation example that matches the selected configuration"
   value = format("Example %s — %s CNI, %s Kubernetes API Endpoint",
-    var.cni_type == "FLANNEL" && var.is_api_endpoint_public ? "1" :
-    var.cni_type == "FLANNEL" && !var.is_api_endpoint_public ? "2" :
-    var.cni_type == "OCI_VCN_IP_NATIVE" && var.is_api_endpoint_public ? "3" : "4",
-    var.cni_type == "FLANNEL" ? "Flannel" : "OCI VCN-Native",
-    var.is_api_endpoint_public ? "Public" : "Private"
+      var.cni_type == "FLANNEL" && var.is_api_endpoint_public ? "1" :
+        var.cni_type == "FLANNEL" && !var.is_api_endpoint_public ? "2" :
+          var.cni_type == "OCI_VCN_IP_NATIVE" && var.is_api_endpoint_public ? "3" : "4",
+      var.cni_type == "FLANNEL" ? "Flannel" : "OCI VCN-Native",
+      var.is_api_endpoint_public ? "Public" : "Private"
   )
 }
 
@@ -41,4 +41,28 @@ output "subnet_lb_id" {
 output "subnet_pods_id" {
   description = "The OCID of the pods subnet (only when using OCI VCN-Native CNI)"
   value       = var.cni_type == "OCI_VCN_IP_NATIVE" ? module.subnet-pods[0].subnet_id : null
+}
+
+# =============================================================================
+# Image Resolution Outputs
+# =============================================================================
+
+output "node_image_id" {
+  description = "The effective image OCID used for worker nodes (user-provided or auto-resolved)"
+  value       = local.effective_node_image_id
+}
+
+output "node_image_source" {
+  description = "Indicates whether the node image was provided by the user or auto-resolved"
+  value       = var.pool_node_image_id != "" ? "user-provided" : "auto-resolved"
+}
+
+output "available_oke_images" {
+  description = "All OKE Oracle Linux 8 images available for the selected Kubernetes version"
+  value = [
+    for img in local.oke_ol8_images : {
+      image_id    = img.image_id
+      source_name = img.source_name
+    }
+  ]
 }

@@ -623,7 +623,8 @@ module "oke-node-pool" {
   node_pool_name     = "${var.cluster_name}-node-pool"
   kubernetes_version = var.kubernetes_version
   node_shape         = var.pool_node_shape
-  node_image_id      = var.pool_node_image_id
+  # Uses the effective image: user-provided OCID or auto-resolved from data source
+  node_image_id      = local.effective_node_image_id
   ocpus              = var.ocpus
   memory_in_gbs      = var.memory_in_gbs
   node_subnet_id     = module.subnet-nodes.subnet_id

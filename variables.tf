@@ -59,6 +59,13 @@ variable "kubernetes_version" {
   default     = "v1.35.0"
 }
 
+# Hidden helper variable used by the ORM schema for oci:kubernetes:versions:id
+variable "cluster_option_id" {
+  description = "Internal variable used by ORM schema to populate the Kubernetes version dropdown. Do not modify."
+  type        = string
+  default     = "all"
+}
+
 # =============================================================================
 # Network Configuration
 # =============================================================================
@@ -111,8 +118,14 @@ variable "pool_node_shape" {
 }
 
 variable "pool_node_image_id" {
-  description = "The OCID of the image to be used for the nodes in the node pool."
+  description = <<-EOT
+    The OCID of the image to be used for the nodes in the node pool.
+    When left empty, the latest OKE Oracle Linux 8 worker node image
+    compatible with the selected Kubernetes version is automatically resolved
+    via the oci_containerengine_node_pool_option data source.
+  EOT
   type        = string
+  default     = ""
 }
 
 variable "ocpus" {
