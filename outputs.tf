@@ -5,11 +5,11 @@
 output "scenario_description" {
   description = "The Oracle documentation example that matches the selected configuration"
   value = format("Example %s — %s CNI, %s Kubernetes API Endpoint",
-      var.cni_type == "FLANNEL" && var.is_api_endpoint_public ? "1" :
-        var.cni_type == "FLANNEL" && !var.is_api_endpoint_public ? "2" :
-          var.cni_type == "OCI_VCN_IP_NATIVE" && var.is_api_endpoint_public ? "3" : "4",
-      var.cni_type == "FLANNEL" ? "Flannel" : "OCI VCN-Native",
-      var.is_api_endpoint_public ? "Public" : "Private"
+    var.cni_type == "FLANNEL" && var.is_api_endpoint_public ? "1" :
+    var.cni_type == "FLANNEL" && !var.is_api_endpoint_public ? "2" :
+    var.cni_type == "OCI_VCN_IP_NATIVE" && var.is_api_endpoint_public ? "3" : "4",
+    var.cni_type == "FLANNEL" ? "Flannel" : "OCI VCN-Native",
+    var.is_api_endpoint_public ? "Public" : "Private"
   )
 }
 

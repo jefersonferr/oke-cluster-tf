@@ -223,7 +223,7 @@ module "sl-subnet-nodes" {
     ],
 
     # --- Flannel-only: pod-to-pod via overlay on worker nodes subnet ---
-      local.is_flannel ? [
+    local.is_flannel ? [
       {
         protocol    = "all"
         source      = var.subnet_nodes_cidr_24
@@ -233,7 +233,7 @@ module "sl-subnet-nodes" {
     ] : [],
 
     # --- VCN-Native-only: worker nodes receive traffic from pods subnet ---
-      local.is_vcn_native ? [
+    local.is_vcn_native ? [
       {
         protocol    = "all"
         source      = var.subnet_pods_cidr_19
@@ -282,7 +282,7 @@ module "sl-subnet-nodes" {
     ],
 
     # --- Flannel-only: pod-to-pod and internet access from workers ---
-      local.is_flannel ? [
+    local.is_flannel ? [
       {
         protocol         = "all"
         destination      = var.subnet_nodes_cidr_24
@@ -298,7 +298,7 @@ module "sl-subnet-nodes" {
     ] : [],
 
     # --- VCN-Native-only: worker nodes to pods subnet ---
-      local.is_vcn_native ? [
+    local.is_vcn_native ? [
       {
         protocol         = "all"
         destination      = var.subnet_pods_cidr_19
@@ -359,7 +359,7 @@ module "sl-subnet-api-endpoint" {
     ],
 
     # --- Public API: allow external access from internet ---
-      local.is_api_public ? [
+    local.is_api_public ? [
       {
         protocol    = "6" # TCP
         source      = "0.0.0.0/0"
@@ -371,7 +371,7 @@ module "sl-subnet-api-endpoint" {
     ] : [],
 
     # --- VCN-Native-only: pods to API endpoint ---
-      local.is_vcn_native ? [
+    local.is_vcn_native ? [
       {
         protocol    = "6" # TCP
         source      = var.subnet_pods_cidr_19
@@ -422,7 +422,7 @@ module "sl-subnet-api-endpoint" {
     ],
 
     # --- Flannel: API endpoint to worker nodes TCP/ALL ---
-      local.is_flannel ? [
+    local.is_flannel ? [
       {
         protocol         = "6" # TCP
         destination      = var.subnet_nodes_cidr_24
@@ -432,7 +432,7 @@ module "sl-subnet-api-endpoint" {
     ] : [],
 
     # --- VCN-Native: API endpoint to worker nodes TCP/10250 and to pods ---
-      local.is_vcn_native ? [
+    local.is_vcn_native ? [
       {
         protocol         = "6" # TCP
         destination      = var.subnet_nodes_cidr_24
@@ -624,11 +624,11 @@ module "oke-node-pool" {
   kubernetes_version = var.kubernetes_version
   node_shape         = var.pool_node_shape
   # Uses the effective image: user-provided OCID or auto-resolved from data source
-  node_image_id      = local.effective_node_image_id
-  ocpus              = var.ocpus
-  memory_in_gbs      = var.memory_in_gbs
-  node_subnet_id     = module.subnet-nodes.subnet_id
-  size               = var.pool_size
-  cni_type           = var.cni_type
-  pod_subnet_ids     = local.is_vcn_native ? [module.subnet-pods[0].subnet_id] : []
+  node_image_id  = local.effective_node_image_id
+  ocpus          = var.ocpus
+  memory_in_gbs  = var.memory_in_gbs
+  node_subnet_id = module.subnet-nodes.subnet_id
+  size           = var.pool_size
+  cni_type       = var.cni_type
+  pod_subnet_ids = local.is_vcn_native ? [module.subnet-pods[0].subnet_id] : []
 }

@@ -52,7 +52,7 @@ locals {
 
   # Final image ID: user-provided takes precedence, otherwise auto-resolve
   effective_node_image_id = coalesce(
-      var.pool_node_image_id != "" ? var.pool_node_image_id : null,
+    var.pool_node_image_id != "" ? var.pool_node_image_id : null,
     local.auto_resolved_image_id
   )
 }
