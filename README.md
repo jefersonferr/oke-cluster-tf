@@ -5,6 +5,8 @@
 [![OCI Provider](https://img.shields.io/badge/OCI_Provider-%3E%3D6.0.0-F80000?logo=oracle&logoColor=white)](https://registry.terraform.io/providers/oracle/oci/latest)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
+![OKE Infrastructure as Code — One stack, two variables, four reference architectures](./images/cover.png)
+
 ## Overview
 
 This repository provides a Terraform-based reference implementation to provision a complete Kubernetes environment on **Oracle Cloud Infrastructure (OCI)** using **Oracle Kubernetes Engine (OKE)**.
